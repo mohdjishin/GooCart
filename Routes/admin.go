@@ -15,5 +15,5 @@ func AdminRoute(app *fiber.App) {
 	app.Post("/admin_panel/add_product", Middleware.RequireAdminAuth, Controller.AddProducts)
 	app.Put("/admin_panel/products/edit_products/:id", Middleware.RequireAdminAuth, Controller.UpdatePro)
 	app.Delete("admin_panel/products/delete_products/:id", Middleware.RequireAdminAuth, Controller.DelProduct)
-
+	app.Get("admin_panel/view_users", Middleware.RequireAdminAuth, Controller.ViewUsers)
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/mohdjishin/fiberRESTApi/Database"
+	utils "github.com/mohdjishin/fiberRESTApi/Utils"
 	"github.com/mohdjishin/fiberRESTApi/model"
 )
 
@@ -237,4 +238,29 @@ func DelProduct(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"message": "product deleted",
 	})
+}
+
+func ViewUsers(c *fiber.Ctx) error {
+
+	db := Database.OpenDb()
+	defer Database.CloseDb(db)
+	var user []model.Users
+	err := db.Where("id > ?", 0).Find(&user).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+	var address []model.Address
+	err = db.Where("id > ?", 0).Find(&address).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(address)
+
+	infoWithoutAddress := utils.ExtractPersonalInfo(user)
+	infowithPersonal := utils.ExtractAdresses(address)
+
+	comb := utils.Combined(infoWithoutAddress, infowithPersonal)
+
+	return c.Status(200).JSON(comb)
+
 }
