@@ -132,3 +132,23 @@ func Validate(c *fiber.Ctx) error {
 	})
 
 }
+func UserManagement(c *fiber.Ctx) error {
+	db := Database.OpenDb()
+	defer Database.CloseDb(db)
+
+	user := new(model.Users)
+
+	if err := c.BodyParser(user); err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	fmt.Println(user.ID)
+
+	fmt.Println(user.Status)
+
+	db.Model(&model.Users{}).Where("id = ?", user.ID).Update("status", user.Status)
+	return c.Status(200).JSON(fiber.Map{
+		"message": "updated",
+	})
+
+}

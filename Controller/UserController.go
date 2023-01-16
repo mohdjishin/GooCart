@@ -103,6 +103,12 @@ func UserLogin(c *fiber.Ctx) error {
 		})
 	}
 
+	if usr.Status {
+		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
+			"message": "you have been restricted",
+		})
+	}
+
 	fmt.Println(usr.ID)
 
 	// create tokem
@@ -178,3 +184,99 @@ func Verification(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{"message": "phone number verified"})
 
 }
+
+func EditUserInfo(c *fiber.Ctx) error {
+	db := Database.OpenDb()
+	defer Database.CloseDb(db)
+	userId := c.Locals("id")
+
+	// get user info from req
+	user := new(model.Users)
+	address := new(model.Address)
+
+	if err := c.BodyParser(user); err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+	// get address info from req
+	if err := c.BodyParser(address); err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	fmt.Println(user.Name)
+
+	fmt.Println(user.Password)
+	fmt.Println(user.Phone)
+
+	fmt.Println(user.CountryCode)
+
+	fmt.Println(address.HouseName)
+
+	fmt.Println(address.Street)
+
+	fmt.Println(address.City)
+	fmt.Println(address.State)
+	fmt.Println(address.Pin)
+
+	userInfo := new(model.Users)
+
+	db.Find(&userInfo, userId)
+	fmt.Println(userInfo)
+
+	addressInfo := new(model.Address)
+
+	db.Find(&addressInfo, userId)
+
+	fmt.Println(addressInfo)
+
+	// get password and hash it
+
+	if user.Password != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+		if err != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+				"message": "not able to hash pasword",
+			})
+
+		}
+		userInfo.Password = string(hash)
+	}
+
+	if user.Phone != "" {
+		userInfo.Phone = user.Phone
+		userInfo.Verified = false
+		userInfo.CountryCode = user.CountryCode
+
+	}
+	if user.Name != "" {
+		userInfo.Name = user.Name
+	}
+	addressInfo.HouseName = address.HouseName
+	addressInfo.Street = address.Street
+	addressInfo.State = address.State
+	addressInfo.City = address.City
+	addressInfo.Pin = address.Pin
+
+	db.Save(&userInfo)
+	db.Save(&addressInfo)
+	res := model.UserInfo{
+		Name:        userInfo.Name,
+		Username:    userInfo.Username,
+		Email:       userInfo.Email,
+		Password:    "Sensitive information",
+		Phone:       userInfo.Phone,
+		Verified:    userInfo.Verified,
+		CountryCode: userInfo.CountryCode,
+		HouseName:   addressInfo.HouseName,
+		Street:      addressInfo.Street,
+		City:        addressInfo.City,
+		State:       addressInfo.State,
+		Pin:         addressInfo.Pin,
+	}
+
+	return c.Status(200).JSON(res)
+}
+
+// userInfo := new(model.Users)
+
+// db.Find(&userInfo, userId)
+// fmt.Println(userInfo)

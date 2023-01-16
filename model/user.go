@@ -14,6 +14,7 @@ type Users struct {
 	Phone       string `json:"phone"`
 	CountryCode string `json:"country_code"`
 	Verified    bool
+	Status      bool `json:"status"`
 }
 
 type Address struct {
@@ -29,4 +30,20 @@ type Address struct {
 
 type OTP struct {
 	OTP string `json:"otp"`
+}
+
+type UserInfo struct {
+	Name        string
+	Username    string
+	Email       string
+	Password    string
+	Phone       string
+	CountryCode string
+	Verified    bool
+
+	HouseName string
+	Street    string
+	City      string
+	State     string
+	Pin       string
 }
