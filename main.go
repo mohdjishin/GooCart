@@ -5,21 +5,22 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/mohdjishin/GoCart/Database"
-	"github.com/mohdjishin/GoCart/Routes"
+	"github.com/mohdjishin/GoCart/database"
+	"github.com/mohdjishin/GoCart/routes"
 )
 
 func init() {
 
-	Database.SyncDatabase()
+	database.SyncDatabase()
 }
 
 func main() {
 
 	app := fiber.New()
 	app.Static("/images", "./public/upload")
-	Routes.AdminRoute(app)
-	Routes.UserRoute(app)
+	routes.AdminRoute(app)
+
+	routes.UserRoute(app)
 	log.Fatal(app.Listen(":" + os.Getenv("PORT")))
 
 }

@@ -1,4 +1,4 @@
-package Database
+package database
 
 import "github.com/mohdjishin/GoCart/model"
 

@@ -1,4 +1,4 @@
-package Controller
+package controller
 
 import (
 	"fmt"
@@ -7,18 +7,19 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/mohdjishin/GoCart/Database"
-	utils "github.com/mohdjishin/GoCart/Utils"
+	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
+	utils "github.com/mohdjishin/GoCart/utils"
 )
 
 func AddProducts(c *fiber.Ctx) error {
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := database.OpenDb()
+	defer database.CloseDb(db)
 
 	product := new(model.Products)
 
 	product.Product_Name = c.FormValue("pro_name")
+	fmt.Println(product.Product_Name)
 	if price, err := strconv.ParseFloat(c.FormValue("price"), 64); err == nil {
 		product.Price = price
 	}
@@ -89,8 +90,8 @@ func AddProducts(c *fiber.Ctx) error {
 }
 
 func UpdatePro(c *fiber.Ctx) error {
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := database.OpenDb()
+	defer database.CloseDb(db)
 
 	id := c.Params("id")
 	fmt.Println(id)
@@ -192,8 +193,8 @@ func UpdatePro(c *fiber.Ctx) error {
 }
 
 func DelProduct(c *fiber.Ctx) error {
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := database.OpenDb()
+	defer database.CloseDb(db)
 	id := c.Params("id")
 	fmt.Println(id)
 
@@ -242,8 +243,8 @@ func DelProduct(c *fiber.Ctx) error {
 
 func ViewUsers(c *fiber.Ctx) error {
 
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := database.OpenDb()
+	defer database.CloseDb(db)
 	var user []model.Users
 	err := db.Where("id > ?", 0).Find(&user).Error
 	if err != nil {

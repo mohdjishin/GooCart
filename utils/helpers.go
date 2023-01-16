@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/mohdjishin/GoCart/model"
 )
@@ -80,4 +81,12 @@ func Combined(users []information, addresses []Extractaddress) []Combine {
 	}
 	fmt.Println(combined)
 	return combined
+}
+
+func CheckComplexityOFPassword(password string) bool {
+	hasNumber := regexp.MustCompile(`[0-9]`).MatchString
+	hasUpper := regexp.MustCompile(`[A-Z]`).MatchString
+	hasLower := regexp.MustCompile(`[a-z]`).MatchString
+	hasSymbol := regexp.MustCompile(`[!@#\$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]`).MatchString
+	return hasNumber(password) && hasUpper(password) && hasLower(password) && hasSymbol(password)
 }

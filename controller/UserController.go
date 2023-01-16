@@ -1,4 +1,4 @@
-package Controller
+package controller
 
 import (
 	"fmt"
@@ -8,16 +8,16 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/mohdjishin/GoCart/Database"
-	utils "github.com/mohdjishin/GoCart/Utils"
+	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
+	utils "github.com/mohdjishin/GoCart/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func UserSignup(c *fiber.Ctx) error {
 
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := database.OpenDb()
+	defer database.CloseDb(db)
 	// get the username and password
 	user := new(model.Users)
 	if err := c.BodyParser(user); err != nil {
@@ -76,8 +76,8 @@ func UserSignup(c *fiber.Ctx) error {
 }
 
 func UserLogin(c *fiber.Ctx) error {
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := database.OpenDb()
+	defer database.CloseDb(db)
 
 	body := new(model.Users)
 	// take data from req
@@ -155,9 +155,9 @@ func Home(c *fiber.Ctx) error {
 
 func Verification(c *fiber.Ctx) error {
 
-	db := Database.OpenDb()
+	db := database.OpenDb()
 
-	defer Database.CloseDb(db)
+	defer database.CloseDb(db)
 
 	userId := c.Locals("id")
 
@@ -186,8 +186,8 @@ func Verification(c *fiber.Ctx) error {
 }
 
 func EditUserInfo(c *fiber.Ctx) error {
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := database.OpenDb()
+	defer database.CloseDb(db)
 	userId := c.Locals("id")
 
 	// get user info from req

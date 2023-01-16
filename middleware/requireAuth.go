@@ -1,4 +1,4 @@
-package Middleware
+package middleware
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/mohdjishin/GoCart/Database"
+	Database "github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
 )
 
