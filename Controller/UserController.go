@@ -8,9 +8,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/mohdjishin/fiberRESTApi/Database"
-	utils "github.com/mohdjishin/fiberRESTApi/Utils"
-	"github.com/mohdjishin/fiberRESTApi/model"
+	"github.com/mohdjishin/GoCart/Database"
+	utils "github.com/mohdjishin/GoCart/Utils"
+	"github.com/mohdjishin/GoCart/model"
 	"golang.org/x/crypto/bcrypt"
 )
 

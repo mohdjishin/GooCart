@@ -8,8 +8,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/mohdjishin/fiberRESTApi/Database"
-	"github.com/mohdjishin/fiberRESTApi/model"
+	"github.com/mohdjishin/GoCart/Database"
+	"github.com/mohdjishin/GoCart/model"
 	"golang.org/x/crypto/bcrypt"
 )
 

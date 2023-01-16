@@ -1,4 +1,4 @@
-module github.com/mohdjishin/fiberRESTApi
+module github.com/mohdjishin/GoCart
 
 go 1.19
 

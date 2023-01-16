@@ -7,9 +7,9 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/mohdjishin/fiberRESTApi/Database"
-	utils "github.com/mohdjishin/fiberRESTApi/Utils"
-	"github.com/mohdjishin/fiberRESTApi/model"
+	"github.com/mohdjishin/GoCart/Database"
+	utils "github.com/mohdjishin/GoCart/Utils"
+	"github.com/mohdjishin/GoCart/model"
 )
 
 func AddProducts(c *fiber.Ctx) error {

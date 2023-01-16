@@ -1,6 +1,6 @@
 package Database
 
-import "github.com/mohdjishin/fiberRESTApi/model"
+import "github.com/mohdjishin/GoCart/model"
 
 func SyncDatabase() {
 	db := OpenDb()

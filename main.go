@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/mohdjishin/fiberRESTApi/Database"
-	"github.com/mohdjishin/fiberRESTApi/Routes"
+	"github.com/mohdjishin/GoCart/Database"
+	"github.com/mohdjishin/GoCart/Routes"
 )
 
 func init() {

@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 
-	"github.com/mohdjishin/fiberRESTApi/model"
+	"github.com/mohdjishin/GoCart/model"
 )
 
 type information struct {

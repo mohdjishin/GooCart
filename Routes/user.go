@@ -2,8 +2,8 @@ package Routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mohdjishin/fiberRESTApi/Controller"
-	"github.com/mohdjishin/fiberRESTApi/Middleware"
+	"github.com/mohdjishin/GoCart/Controller"
+	"github.com/mohdjishin/GoCart/Middleware"
 )
 
 func UserRoute(app *fiber.App) {
