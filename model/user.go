@@ -14,6 +14,7 @@ type Users struct {
 	Phone       string `json:"phone"`
 	CountryCode string `json:"country_code"`
 	Verified    bool
+	OTP         string
 	Status      bool `json:"status"`
 }
 

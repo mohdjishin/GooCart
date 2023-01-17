@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
@@ -38,7 +40,12 @@ func UserSignup(c *fiber.Ctx) error {
 	// fmt.Println(user.Phone)
 
 	fmt.Println("+" + user.CountryCode + user.Phone)
-	utils.SendOtp(("+" + user.CountryCode + user.Phone))
+
+	// utils.SendOtp(("+" + user.CountryCode + user.Phone))
+
+	OTP := strconv.FormatUint(uint64(uuid.New().ID()), 10)[:6]
+
+	user.OTP = OTP
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
@@ -59,6 +66,11 @@ func UserSignup(c *fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"message": "failed to create account",
 		})
+
+	}
+	err = utils.SendSMSOTP(("+" + user.CountryCode + user.Phone), OTP)
+	if err != nil {
+		fmt.Println(err)
 
 	}
 
@@ -158,6 +170,7 @@ func Verification(c *fiber.Ctx) error {
 	db := database.OpenDb()
 
 	defer database.CloseDb(db)
+	status := false
 
 	userId := c.Locals("id")
 
@@ -171,7 +184,11 @@ func Verification(c *fiber.Ctx) error {
 
 	db.First(&user, userId)
 
-	status := utils.CheckOtp(("+" + user.CountryCode + user.Phone), otp.OTP)
+	// status := utils.CheckOtp(("+" + user.CountryCode + user.Phone), otp.OTP)
+	if user.OTP == otp.OTP {
+		status = true
+		utils.WelcomeMsg("+" + user.CountryCode + user.Phone)
+	}
 
 	user.Verified = status
 
