@@ -1,9 +1,20 @@
 package utils
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"path"
+
+	"mime/multipart"
 	"regexp"
 
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/google/uuid"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/mohdjishin/GoCart/model"
 )
 
@@ -89,4 +100,36 @@ func CheckComplexityOFPassword(password string) bool {
 	hasLower := regexp.MustCompile(`[a-z]`).MatchString
 	hasSymbol := regexp.MustCompile(`[!@#\$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]`).MatchString
 	return hasNumber(password) && hasUpper(password) && hasLower(password) && hasSymbol(password)
+}
+
+func UploadToBucket(file *multipart.FileHeader) (string, bool, string) {
+
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Printf("error: %v", err)
+		return "loading failed", false, ""
+	}
+
+	client := s3.NewFromConfig(cfg)
+
+	file.Filename = uuid.New().String() + path.Ext(file.Filename)
+
+	f, err := file.Open()
+	if err != nil {
+		return "file open failed", false, ""
+	}
+
+	uploader := manager.NewUploader(client)
+	result, UploadErr := uploader.Upload(context.TODO(), &s3.PutObjectInput{
+		Bucket: aws.String("code-with-jishin"),
+		Key:    aws.String(file.Filename),
+		Body:   f,
+		ACL:    "public-read",
+	})
+	if UploadErr != nil {
+		return "upload error", false, ""
+	}
+
+	return result.Location, true, file.Filename
+
 }

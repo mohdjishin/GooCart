@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
@@ -57,20 +59,47 @@ func AddProducts(c *fiber.Ctx) error {
 
 	productImage.ProductId = product.ID
 
-	err = c.SaveFile(fileOne, "public/upload/"+fileOne.Filename)
-	if err != nil {
-		return c.Status(501).JSON(fiber.Map{"message": fileOne.Filename + " upload not completed successfull"})
+	fileOne.Filename = uuid.New().String() + path.Ext(fileOne.Filename)
+	fileTWo.Filename = uuid.New().String() + path.Ext(fileTWo.Filename)
+	fileThree.Filename = uuid.New().String() + path.Ext(fileThree.Filename)
+
+	// err = c.SaveFile(fileOne, "public/upload/"+fileOne.Filename)
+	// if err != nil {
+	// 	return c.Status(501).JSON(fiber.Map{"message": fileOne.Filename + " upload not completed successfull"})
+	// }
+
+	// err = c.SaveFile(fileTWo, "public/upload/"+fileTWo.Filename)
+	// if err != nil {
+	// 	return c.Status(501).JSON(fiber.Map{"message": fileTWo.Filename + " upload not completed successfull"})
+	// }
+
+	// err = c.SaveFile(fileThree, "public/upload/"+fileThree.Filename)
+	// if err != nil {
+	// 	return c.Status(501).JSON(fiber.Map{"message": fileThree.Filename + " upload not completed successfull"})
+	// }
+
+	url1, status1, _ := utils.UploadToBucket(fileOne)
+	if !status1 {
+		return c.Status(201).JSON(fiber.Map{
+			"message": "img one upload failed",
+		})
 	}
 
-	err = c.SaveFile(fileTWo, "public/upload/"+fileTWo.Filename)
-	if err != nil {
-		return c.Status(501).JSON(fiber.Map{"message": fileTWo.Filename + " upload not completed successfull"})
+	url2, status2, _ := utils.UploadToBucket(fileOne)
+	if !status2 {
+		return c.Status(201).JSON(fiber.Map{
+			"message": "img two upload failed",
+		})
 	}
-
-	err = c.SaveFile(fileThree, "public/upload/"+fileThree.Filename)
-	if err != nil {
-		return c.Status(501).JSON(fiber.Map{"message": fileThree.Filename + " upload not completed successfull"})
+	url3, status3, _ := utils.UploadToBucket(fileOne)
+	if !status3 {
+		return c.Status(201).JSON(fiber.Map{
+			"message": "img three upload failed",
+		})
 	}
+	fileOne.Filename = url1
+	fileTWo.Filename = url2
+	fileTWo.Filename = url3
 
 	productImage.ImageOne = fileOne.Filename
 	productImage.ImgTwo = fileTWo.Filename
@@ -129,11 +158,11 @@ func UpdatePro(c *fiber.Ctx) error {
 	}
 
 	pro.ID = uint(u64)
-	pro.Product_Name = c.FormValue("pro_name")
+	pro.Product_Name = c.FormValue("product_name")
 	if price, err := strconv.ParseFloat(c.FormValue("price"), 64); err == nil {
 		pro.Price = price
 	}
-	pro.Product_Category = c.FormValue("pro_category")
+	pro.Product_Category = c.FormValue("product_category")
 
 	fileOne, err := c.FormFile("img_one")
 
