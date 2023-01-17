@@ -17,7 +17,7 @@ func init() {
 func main() {
 
 	app := fiber.New()
-	app.Static("/images", "./public/upload")
+
 	routes.AdminRoute(app)
 
 	routes.UserRoute(app)
