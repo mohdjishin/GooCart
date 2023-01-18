@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -25,7 +26,7 @@ func AddProducts(c *fiber.Ctx) error {
 	if price, err := strconv.ParseFloat(c.FormValue("price"), 64); err == nil {
 		product.Price = price
 	}
-	product.Product_Category = c.FormValue("pro_category")
+	product.Product_Category = strings.ToLower(c.FormValue("pro_category"))
 
 	fileOne, err := c.FormFile("img_one")
 	if err != nil {
@@ -162,7 +163,7 @@ func UpdatePro(c *fiber.Ctx) error {
 	if price, err := strconv.ParseFloat(c.FormValue("price"), 64); err == nil {
 		pro.Price = price
 	}
-	pro.Product_Category = c.FormValue("pro_category")
+	pro.Product_Category = strings.ToLower(c.FormValue("pro_category"))
 
 	fileOne, err := c.FormFile("img_one")
 
@@ -318,4 +319,31 @@ func ViewProducts(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(comb)
 
+}
+
+func GetbyCategory(c *fiber.Ctx) error {
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	type Category struct {
+		Category string `json:"pro_category"`
+	}
+	ctgry := new(Category)
+
+	if err := c.BodyParser(ctgry); err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	var products []model.Products
+
+	err := db.Where("product_category = ?", strings.ToLower(ctgry.Category)).Find(&products).Error
+
+	if err != nil {
+		return c.Status(200).JSON(fiber.Map{
+			"message": "no product found with category : " + ctgry.Category,
+		})
+	}
+
+	fmt.Println(products)
+	fmt.Println(ctgry.Category)
+	return c.Status(200).JSON(products)
 }
