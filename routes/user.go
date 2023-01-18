@@ -18,5 +18,7 @@ func UserRoute(app *fiber.App) {
 
 	app.Get("/user/addtocart/:id", middleware.RequreUserAuth, controller.AddToCart)
 
-	app.Post("/user/get_by_category", controller.GetbyCategory)
+	app.Post("/user/get_by_category", middleware.RequreUserAuth, controller.GetbyCategory)
+	app.Get("/user/search/:key", controller.SearchProduct)
+
 }

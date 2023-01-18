@@ -347,3 +347,28 @@ func GetbyCategory(c *fiber.Ctx) error {
 	fmt.Println(ctgry.Category)
 	return c.Status(200).JSON(products)
 }
+
+func SearchProduct(c *fiber.Ctx) error {
+	db := database.OpenDb()
+
+	defer database.CloseDb(db)
+	id := c.Params("key")
+	fmt.Println(id)
+
+	var products []model.Products
+
+	res := db.Select("id", "price", "product_category", "product_name").Find(&products, "product_name = ?", id)
+
+	if res.Error != nil {
+		return c.Status(200).JSON(fiber.Map{
+			"message": "no product with search key +: " + id,
+		})
+	}
+	if len(products) == 0 {
+		return c.Status(200).JSON(fiber.Map{
+			"message": "no product with search key +: " + id,
+		})
+	}
+
+	return c.Status(200).JSON(products)
+}
