@@ -48,3 +48,35 @@ type UserInfo struct {
 	State     string
 	Pin       string
 }
+
+type PersonalInformation struct {
+	UserId       int
+	Name         string
+	Username     string
+	Phone        string
+	Mail         string
+	Verification bool
+}
+
+type Combine struct {
+	UserId       int
+	Name         string
+	Username     string
+	Phone        string
+	Mail         string
+	Verification bool
+	Housename    string
+	Street       string
+	City         string
+	Pin          string
+	State        string
+}
+
+type Extractaddress struct {
+	UserID    uint
+	Housename string
+	Street    string
+	City      string
+	Pin       string
+	State     string
+}

@@ -14,5 +14,5 @@ func UserRoute(app *fiber.App) {
 
 	app.Post("/verification", middleware.RequreUserAuth, controller.Verification)      //json
 	app.Post("/user/user_account", middleware.RequreUserAuth, controller.EditUserInfo) //json
-
+	app.Get("/user/view_products", middleware.RequreUserAuth, controller.ViewProducts)
 }

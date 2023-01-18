@@ -99,7 +99,7 @@ func AddProducts(c *fiber.Ctx) error {
 	}
 	fileOne.Filename = url1
 	fileTWo.Filename = url2
-	fileTWo.Filename = url3
+	fileThree.Filename = url3
 
 	productImage.ImageOne = fileOne.Filename
 	productImage.ImgTwo = fileTWo.Filename
@@ -158,11 +158,11 @@ func UpdatePro(c *fiber.Ctx) error {
 	}
 
 	pro.ID = uint(u64)
-	pro.Product_Name = c.FormValue("product_name")
+	pro.Product_Name = c.FormValue("pro_name")
 	if price, err := strconv.ParseFloat(c.FormValue("price"), 64); err == nil {
 		pro.Price = price
 	}
-	pro.Product_Category = c.FormValue("product_category")
+	pro.Product_Category = c.FormValue("pro_category")
 
 	fileOne, err := c.FormFile("img_one")
 
@@ -291,27 +291,30 @@ func DelProduct(c *fiber.Ctx) error {
 		"message": "product deleted",
 	})
 }
-
-func ViewUsers(c *fiber.Ctx) error {
-
+func ViewProducts(c *fiber.Ctx) error {
 	db := database.OpenDb()
 	defer database.CloseDb(db)
-	var user []model.Users
-	err := db.Where("id > ?", 0).Find(&user).Error
+
+	var products []model.Products
+
+	err := db.Where("id > ?", 0).Find(&products).Error
+
 	if err != nil {
 		fmt.Println(err)
 	}
-	var address []model.Address
-	err = db.Where("id > ?", 0).Find(&address).Error
+
+	var productsImages []model.ProductImage
+
+	err = db.Where("id > ?", 0).Find(&productsImages).Error
+
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(address)
 
-	infoWithoutAddress := utils.ExtractPersonalInfo(user)
-	infowithPersonal := utils.ExtractAdresses(address)
+	infoWithoutImageDetails := utils.ExtractProductInfo(products)
+	infowithoutPersonal := utils.ExtractProImage(productsImages)
 
-	comb := utils.Combined(infoWithoutAddress, infowithPersonal)
+	comb := utils.CombinePRoductAndProductImage(infoWithoutImageDetails, infowithoutPersonal)
 
 	return c.Status(200).JSON(comb)
 

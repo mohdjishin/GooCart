@@ -6,8 +6,8 @@ import (
 
 type Products struct {
 	gorm.Model
-	Product_Category string  `json:"product_category"`
-	Product_Name     string  `json:"product_name"`
+	Product_Category string  `json:"pro_category"`
+	Product_Name     string  `json:"pro_name"`
 	Price            float64 `json:"price"`
 }
 
@@ -24,4 +24,28 @@ type Cart struct {
 	UserId    uint
 	ProductId uint
 	Quantity  int
+}
+
+type ProductInfo struct {
+	ID              int
+	ProductCategory string
+	ProductName     string
+	Price           float64
+}
+
+type ProductImageInfo struct {
+	ProductId  int
+	ImageOne   string
+	ImageTwo   string
+	ImageThree string
+}
+
+type CombinedProductInfo struct {
+	ID              int     `json:"id"`
+	ProductCategory string  `json:"pro_category"`
+	ProductName     string  `json:"pro_name"`
+	Price           float64 `json:"price"`
+	ImageOne        string  `json:"img_one"`
+	ImageTwo        string  `json:"img_two"`
+	ImageThree      string  `json:"img_three"`
 }

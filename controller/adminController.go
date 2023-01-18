@@ -10,6 +10,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
+	utils "github.com/mohdjishin/GoCart/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -150,5 +151,29 @@ func UserManagement(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"message": "updated",
 	})
+
+}
+func ViewUsers(c *fiber.Ctx) error {
+
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	var user []model.Users
+	err := db.Where("id > ?", 0).Find(&user).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+	var address []model.Address
+	err = db.Where("id > ?", 0).Find(&address).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(address)
+
+	infoWithoutAddress := utils.ExtractPersonalInfo(user)
+	infowithPersonal := utils.ExtractAdresses(address)
+
+	comb := utils.Combined(infoWithoutAddress, infowithPersonal)
+
+	return c.Status(200).JSON(comb)
 
 }

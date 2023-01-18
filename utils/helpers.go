@@ -18,7 +18,7 @@ import (
 	"github.com/mohdjishin/GoCart/model"
 )
 
-type information struct {
+type PersonalInformation struct {
 	UserId       int
 	Name         string
 	Username     string
@@ -50,10 +50,34 @@ type Extractaddress struct {
 	State     string
 }
 
-func ExtractPersonalInfo(users []model.Users) []information {
-	var newUsers []information
+type ProductInfo struct {
+	ID              int
+	ProductCategory string
+	ProductName     string
+	Price           float64
+}
+
+type ProductImageInfo struct {
+	ProductId  int
+	ImageOne   string
+	ImageTwo   string
+	ImageThree string
+}
+
+type CombinedProductInfo struct {
+	ID              int     `json:"id"`
+	ProductCategory string  `json:"pro_category"`
+	ProductName     string  `json:"pro_name"`
+	Price           float64 `json:"price"`
+	ImageOne        string  `json:"img_one"`
+	ImageTwo        string  `json:"img_two"`
+	ImageThree      string  `json:"img_three"`
+}
+
+func ExtractPersonalInfo(users []model.Users) []PersonalInformation {
+	var newUsers []PersonalInformation
 	for _, user := range users {
-		newUsers = append(newUsers, information{
+		newUsers = append(newUsers, PersonalInformation{
 			UserId:       int(user.ID),
 			Name:         user.Name,
 			Username:     user.Username,
@@ -79,7 +103,7 @@ func ExtractAdresses(addr []model.Address) []Extractaddress {
 	return newUsers
 }
 
-func Combined(users []information, addresses []Extractaddress) []Combine {
+func Combined(users []PersonalInformation, addresses []Extractaddress) []Combine {
 	var combined []Combine
 	for _, u := range users {
 		for _, a := range addresses {
@@ -128,8 +152,50 @@ func UploadToBucket(file *multipart.FileHeader) (string, bool, string) {
 	})
 	if UploadErr != nil {
 		return "upload error", false, ""
+
 	}
+	fmt.Println(result.Location)
 
 	return result.Location, true, file.Filename
 
+}
+
+func ExtractProductInfo(product []model.Products) []ProductInfo {
+	var newpro []ProductInfo
+	for _, pro := range product {
+		newpro = append(newpro, ProductInfo{
+			ID:              int(pro.ID),
+			ProductName:     pro.Product_Name,
+			ProductCategory: pro.Product_Category,
+			Price:           pro.Price,
+		})
+	}
+	return newpro
+}
+func ExtractProImage(proImg []model.ProductImage) []ProductImageInfo {
+	var productImages []ProductImageInfo
+	for _, pro := range proImg {
+		productImages = append(productImages, ProductImageInfo{
+			ProductId:  int(pro.ProductId),
+			ImageOne:   pro.ImageOne,
+			ImageTwo:   pro.ImgTwo,
+			ImageThree: pro.ImgThree,
+		})
+	}
+	return productImages
+}
+
+func CombinePRoductAndProductImage(proInfo []ProductInfo, proimageInfo []ProductImageInfo) []CombinedProductInfo {
+	var combined []CombinedProductInfo
+	for _, proInf := range proInfo {
+		for _, proImg := range proimageInfo {
+
+			if proInf.ID == int(proImg.ProductId) {
+				fmt.Println("he;p")
+				combined = append(combined, CombinedProductInfo{ID: proImg.ProductId, ProductName: proInf.ProductName, ProductCategory: proInf.ProductCategory, Price: proInf.Price, ImageOne: proImg.ImageOne, ImageTwo: proImg.ImageTwo, ImageThree: proImg.ImageThree})
+			}
+		}
+	}
+	fmt.Println(combined)
+	return combined
 }
