@@ -293,7 +293,64 @@ func EditUserInfo(c *fiber.Ctx) error {
 	return c.Status(200).JSON(res)
 }
 
-// userInfo := new(model.Users)
+func AddToCart(c *fiber.Ctx) error {
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	user_Id := c.Locals("id")
+	usr_id := fmt.Sprintf("%v", user_Id)
 
-// db.Find(&userInfo, userId)
-// fmt.Println(userInfo)
+	prod := new(model.Products)
+
+	product_Id := c.Params("id")
+	db.First(&prod, product_Id)
+	// db.Find(&prod, proId)
+
+	cart := new(model.Cart)
+
+	prodImg := new(model.ProductImage)
+
+	res := db.First(&prodImg, "product_id =? ", product_Id)
+	if res.Error != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+
+			"message": "no product found with pro_id :" + product_Id,
+		})
+
+	}
+
+	db.Where("user_id = ? AND product_id >= ?", usr_id, product_Id).First(&cart)
+	if cart.ID == 0 {
+		cart.UserId = usr_id
+		fmt.Println("hhhh")
+		cart.ProductId = uint(prod.ID)
+		cart.Price = prod.Price
+		cart.Image = prodImg.ImageOne
+		cart.Quantity = 1
+		res := db.Create(&cart)
+		if res.Error != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+				"message": "failed adding to cart",
+			})
+
+		}
+		return c.Status(200).JSON(cart)
+	}
+
+	cart.UserId = usr_id
+	fmt.Println("hhhh")
+	cart.ProductId = uint(prod.ID)
+
+	cart.Image = prodImg.ImageOne
+	cart.Quantity = cart.Quantity + 1
+	cart.Price = prod.Price * float64(cart.Quantity)
+	// fmt.Println(prod.Product_Name)
+	res = db.Save(&cart)
+	if res.Error != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": "failed adding to cart",
+		})
+
+	}
+
+	return c.Status(200).JSON(cart)
+}

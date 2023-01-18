@@ -21,9 +21,12 @@ type ProductImage struct {
 
 type Cart struct {
 	gorm.Model
-	UserId    uint
+
+	UserId    string
 	ProductId uint
 	Quantity  int
+	Image     string
+	Price     float64
 }
 
 type ProductInfo struct {

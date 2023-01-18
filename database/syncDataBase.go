@@ -12,4 +12,6 @@ func SyncDatabase() {
 
 	db.AutoMigrate(&model.Users{})
 	db.AutoMigrate(&model.Address{})
+
+	db.AutoMigrate(&model.Cart{})
 }
