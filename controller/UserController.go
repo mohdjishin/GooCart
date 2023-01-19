@@ -316,7 +316,11 @@ func AddToCart(c *fiber.Ctx) error {
 
 	}
 
-	db.Where("user_id = ? AND product_id >= ?", usr_id, product_Id).First(&cart)
+	res = db.Where("user_id = ? AND product_id >= ?", usr_id, product_Id).First(&cart)
+	if res.Error != nil {
+		fmt.Println("ok, new product adding...")
+	}
+
 	if cart.ID == 0 {
 		cart.UserId = usr_id
 		fmt.Println("hhhh")
@@ -324,6 +328,7 @@ func AddToCart(c *fiber.Ctx) error {
 		cart.Price = prod.Price
 		cart.Image = prodImg.ImageOne
 		cart.Quantity = 1
+		cart.Total = (cart.Price * float64(cart.Quantity))
 		res := db.Create(&cart)
 		if res.Error != nil {
 			utils.InternalServerError("failed adding to cart", c)
@@ -337,8 +342,15 @@ func AddToCart(c *fiber.Ctx) error {
 	cart.ProductId = uint(prod.ID)
 
 	cart.Image = prodImg.ImageOne
-	cart.Quantity = cart.Quantity + 1
-	cart.Price = prod.Price * float64(cart.Quantity)
+	if cart.Quantity == 0 {
+
+		cart.Quantity = 1
+	} else {
+		cart.Quantity = cart.Quantity + 1
+	}
+	cart.Price = prod.Price
+
+	cart.Total = (cart.Price * float64(cart.Quantity))
 	// fmt.Println(prod.Product_Name)
 	res = db.Save(&cart)
 	if res.Error != nil {
@@ -348,4 +360,44 @@ func AddToCart(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(cart)
+}
+func OrderFromCart(c *fiber.Ctx) error {
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	user_Id := c.Locals("id")
+	usr_id := fmt.Sprintf("%v", user_Id)
+
+	// products := []model.Products{}
+
+	cart := []model.Cart{}
+
+	orders := new(model.Order)
+
+	db.Where("user_id = ?", usr_id).Find(&cart)
+	// fmt.Println(cart)
+
+	for _, c := range cart {
+
+		orders.OrderId = uuid.NewString()[:7]
+		orders.ProductID = c.ProductId
+		userID, err := strconv.ParseUint(c.UserId, 10, 32)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		orders.UserID = uint(userID)
+		orders.AddressID = uint(userID)
+		orders.Price = c.Price
+
+		orders.Quantity = c.Quantity
+		orders.PaymentStatus = "pending"
+
+		orders.Total = c.Total * float64(c.Quantity)
+		db.Create(&orders)
+		db.Delete(&c)
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "ordered",
+	})
 }

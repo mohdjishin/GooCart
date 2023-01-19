@@ -21,4 +21,7 @@ func UserRoute(app *fiber.App) {
 	app.Post("/user/get_by_category", middleware.RequreUserAuth, controller.GetbyCategory)
 	app.Get("/user/search/:key", controller.SearchProduct)
 
+	app.Get("user/order_from_cart", middleware.RequreUserAuth, controller.OrderFromCart)
+	app.Get("/user/instant_buy/:id", middleware.RequreUserAuth, controller.InstantBuy)
+
 }

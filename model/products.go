@@ -27,6 +27,7 @@ type Cart struct {
 	Quantity  int
 	Image     string
 	Price     float64
+	Total     float64
 }
 
 type ProductInfo struct {

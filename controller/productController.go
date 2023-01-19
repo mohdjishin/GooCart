@@ -2,10 +2,12 @@ package controller
 
 import (
 	"fmt"
+	"mime/multipart"
 	"net/http"
 	"path"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -200,23 +202,62 @@ func UpdatePro(c *fiber.Ctx) error {
 	// if err != nil {
 	// 	return c.Status(501).JSON(fiber.Map{"message": "file upload not completed successfull"})
 	// }
+	var wg sync.WaitGroup
 
-	url1, status1, _ := utils.UploadToBucket(fileOne)
-	if !status1 {
+	var url1 string
+	var status1 bool
 
-		utils.InternalServerError("img one upload failed", c)
-	}
+	var url2 string
+	var status2 bool
 
-	url2, status2, _ := utils.UploadToBucket(fileTwo)
-	if !status2 {
+	var url3 string
+	var status3 bool
 
-		utils.InternalServerError("img two upload failed", c)
-	}
-	url3, status3, _ := utils.UploadToBucket(fileThree)
-	if !status3 {
+	// url1, status1, _ = utils.UploadToBucket(fileOne)
+	// if !status1 {
 
-		utils.InternalServerError("img three upload failed", c)
-	}
+	// 	utils.InternalServerError("img one upload failed", c)
+	// }
+
+	wg.Add(1)
+	go func(url *string, status *bool, fileOne *multipart.FileHeader, w *sync.WaitGroup) {
+		*url, *status, _ = utils.UploadToBucket(fileOne)
+		if !*status {
+
+			utils.InternalServerError("img one upload failed", c)
+		}
+		w.Done()
+	}(&url1, &status1, fileOne, &wg)
+	wg.Add(1)
+	go func(url *string, status *bool, fileTwo *multipart.FileHeader, w *sync.WaitGroup) {
+		*url, *status, _ = utils.UploadToBucket(fileTwo)
+		if !*status {
+
+			utils.InternalServerError("img two upload failed", c)
+		}
+		w.Done()
+	}(&url2, &status2, fileTwo, &wg)
+
+	// url2, status2, _ := utils.UploadToBucket(fileTwo)
+	// if !status2 {
+
+	// 	utils.InternalServerError("img two upload failed", c)
+	// }
+	wg.Add(1)
+	go func(url *string, status *bool, fileThree *multipart.FileHeader, w *sync.WaitGroup) {
+		*url, *status, _ = utils.UploadToBucket(fileThree)
+		if !*status {
+
+			utils.InternalServerError("img three upload failed", c)
+		}
+		w.Done()
+	}(&url3, &status3, fileTwo, &wg)
+	wg.Wait()
+	// url3, status3, _ := utils.UploadToBucket(fileThree)
+	// if !status3 {
+
+	// 	utils.InternalServerError("img three upload failed", c)
+	// }
 	fileOne.Filename = url1
 	fileTwo.Filename = url2
 	fileThree.Filename = url3
@@ -361,4 +402,10 @@ func SearchProduct(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(products)
+}
+
+func InstantBuy(c *fiber.Ctx) error {
+
+	return nil
+
 }
