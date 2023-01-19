@@ -134,10 +134,8 @@ func UserLogin(c *fiber.Ctx) error {
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 	fmt.Println(tokenString)
 	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 
-			"message": "Issue generating token",
-		})
+		utils.InternalServerError("Issue generating token", c)
 	}
 
 	// set to cookie
@@ -311,7 +309,7 @@ func AddToCart(c *fiber.Ctx) error {
 
 	res := db.First(&prodImg, "product_id =? ", product_Id)
 	if res.Error != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(200).JSON(fiber.Map{
 
 			"message": "no product found with pro_id :" + product_Id,
 		})
@@ -328,9 +326,7 @@ func AddToCart(c *fiber.Ctx) error {
 		cart.Quantity = 1
 		res := db.Create(&cart)
 		if res.Error != nil {
-			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-				"message": "failed adding to cart",
-			})
+			utils.InternalServerError("failed adding to cart", c)
 
 		}
 		return c.Status(200).JSON(cart)
@@ -346,9 +342,8 @@ func AddToCart(c *fiber.Ctx) error {
 	// fmt.Println(prod.Product_Name)
 	res = db.Save(&cart)
 	if res.Error != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "failed adding to cart",
-		})
+
+		utils.InternalServerError("failed adding to cart", c)
 
 	}
 

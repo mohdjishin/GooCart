@@ -3,7 +3,6 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"path"
 	"strconv"
 	"strings"
@@ -81,22 +80,19 @@ func AddProducts(c *fiber.Ctx) error {
 
 	url1, status1, _ := utils.UploadToBucket(fileOne)
 	if !status1 {
-		return c.Status(201).JSON(fiber.Map{
-			"message": "img one upload failed",
-		})
+
+		utils.InternalServerError("img one upload failed", c)
 	}
 
 	url2, status2, _ := utils.UploadToBucket(fileTWo)
 	if !status2 {
-		return c.Status(201).JSON(fiber.Map{
-			"message": "img two upload failed",
-		})
+
+		utils.InternalServerError("img two upload failed", c)
 	}
 	url3, status3, _ := utils.UploadToBucket(fileThree)
 	if !status3 {
-		return c.Status(201).JSON(fiber.Map{
-			"message": "img three upload failed",
-		})
+
+		utils.InternalServerError("img three upload failed", c)
 	}
 	fileOne.Filename = url1
 	fileTWo.Filename = url2
@@ -108,9 +104,8 @@ func AddProducts(c *fiber.Ctx) error {
 
 	res = db.Save(&productImage)
 	if res.Error != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"message": "failed in creating products",
-		})
+
+		utils.InternalServerError("failed in creating products", c)
 
 	}
 
@@ -136,20 +131,20 @@ func UpdatePro(c *fiber.Ctx) error {
 	fmt.Println(pImages.ImgTwo)
 	fmt.Println(pImages.ImgThree)
 
-	err := os.Remove("public/upload/" + pImages.ImageOne)
-	if err != nil {
-		fmt.Println("FIle not fount")
-	}
+	// err := os.Remove("public/upload/" + pImages.ImageOne)
+	// if err != nil {
+	// 	fmt.Println("FIle not fount")
+	// }
 
-	err = os.Remove("public/upload/" + pImages.ImgTwo)
-	if err != nil {
-		fmt.Println("FIle not fount")
-	}
+	// err = os.Remove("public/upload/" + pImages.ImgTwo)
+	// if err != nil {
+	// 	fmt.Println("FIle not fount")
+	// }
 
-	err = os.Remove("public/upload/" + pImages.ImgThree)
-	if err != nil {
-		fmt.Println("FIle not fount")
-	}
+	// err = os.Remove("public/upload/" + pImages.ImgThree)
+	// if err != nil {
+	// 	fmt.Println("FIle not fount")
+	// }
 	// update... just deleted files
 
 	pro := new(model.Products)
@@ -208,22 +203,19 @@ func UpdatePro(c *fiber.Ctx) error {
 
 	url1, status1, _ := utils.UploadToBucket(fileOne)
 	if !status1 {
-		return c.Status(201).JSON(fiber.Map{
-			"message": "img one upload failed",
-		})
+
+		utils.InternalServerError("img one upload failed", c)
 	}
 
 	url2, status2, _ := utils.UploadToBucket(fileTwo)
 	if !status2 {
-		return c.Status(201).JSON(fiber.Map{
-			"message": "img two upload failed",
-		})
+
+		utils.InternalServerError("img two upload failed", c)
 	}
 	url3, status3, _ := utils.UploadToBucket(fileThree)
 	if !status3 {
-		return c.Status(201).JSON(fiber.Map{
-			"message": "img three upload failed",
-		})
+
+		utils.InternalServerError("img three upload failed", c)
 	}
 	fileOne.Filename = url1
 	fileTwo.Filename = url2
@@ -324,10 +316,10 @@ func ViewProducts(c *fiber.Ctx) error {
 func GetbyCategory(c *fiber.Ctx) error {
 	db := database.OpenDb()
 	defer database.CloseDb(db)
-	type Category struct {
+	type category struct {
 		Category string `json:"pro_category"`
 	}
-	ctgry := new(Category)
+	ctgry := new(category)
 
 	if err := c.BodyParser(ctgry); err != nil {
 		return c.Status(500).SendString(err.Error())
@@ -343,8 +335,6 @@ func GetbyCategory(c *fiber.Ctx) error {
 		})
 	}
 
-	fmt.Println(products)
-	fmt.Println(ctgry.Category)
 	return c.Status(200).JSON(products)
 }
 
@@ -357,7 +347,7 @@ func SearchProduct(c *fiber.Ctx) error {
 
 	var products []model.Products
 
-	res := db.Select("id", "price", "product_category", "product_name").Find(&products, "product_name = ?", id)
+	res := db.Select("id", "price", "product_category", "product_name").Find(&products, "product_name LIKE ?", id+"%")
 
 	if res.Error != nil {
 		return c.Status(200).JSON(fiber.Map{

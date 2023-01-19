@@ -31,9 +31,11 @@ func Signup(c *fiber.Ctx) error {
 	// hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "not able to hash pasword",
-		})
+
+		utils.InternalServerError("not able to hash pasword", c)
+		// return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+		// 	"message": "not able to hash pasword",
+		// })
 
 	}
 	fmt.Println(hash)
@@ -45,9 +47,10 @@ func Signup(c *fiber.Ctx) error {
 	res := db.Save(&usr)
 
 	if res.Error != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "failed to create account",
-		})
+		// return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+		// 	"message": "failed to create account",
+		// })
+		utils.InternalServerError("failed to create account", c)
 
 	}
 	return c.Status(200).SendString("account created")
@@ -78,7 +81,7 @@ func Login(c *fiber.Ctx) error {
 	err := bcrypt.CompareHashAndPassword([]byte(usr.Password), []byte(body.Password))
 	if err != nil {
 
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
 			"message": "incorrect  password!",
 		})
 	}
