@@ -23,3 +23,6 @@ type Order struct {
 	PaymentStatus string
 	Aproveled     bool
 }
+
+type InstentOrder struct {
+}

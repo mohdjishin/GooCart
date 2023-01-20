@@ -320,9 +320,14 @@ func AddToCart(c *fiber.Ctx) error {
 	if res.Error != nil {
 		fmt.Println("ok, new product adding...")
 	}
-
+	i, err := strconv.Atoi(usr_id)
+	if err != nil {
+		fmt.Println(err)
+	}
 	if cart.ID == 0 {
+
 		cart.UserId = usr_id
+		cart.CartID = i
 		fmt.Println("hhhh")
 		cart.ProductId = uint(prod.ID)
 		cart.Price = prod.Price
@@ -336,7 +341,7 @@ func AddToCart(c *fiber.Ctx) error {
 		}
 		return c.Status(200).JSON(cart)
 	}
-
+	cart.CartID = i
 	cart.UserId = usr_id
 	fmt.Println("hhhh")
 	cart.ProductId = uint(prod.ID)
@@ -361,6 +366,7 @@ func AddToCart(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(cart)
 }
+
 func OrderFromCart(c *fiber.Ctx) error {
 	db := database.OpenDb()
 	defer database.CloseDb(db)
@@ -377,8 +383,9 @@ func OrderFromCart(c *fiber.Ctx) error {
 	// fmt.Println(cart)
 
 	for _, c := range cart {
-
-		orders.OrderId = uuid.NewString()[:7]
+		id := uuid.New().ID()
+		str := strconv.Itoa(int(id))
+		orders.OrderId = str[:7]
 		orders.ProductID = c.ProductId
 		userID, err := strconv.ParseUint(c.UserId, 10, 32)
 		if err != nil {
@@ -399,5 +406,54 @@ func OrderFromCart(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"message": "ordered",
+	})
+}
+
+func Checkout(c *fiber.Ctx) error {
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	uid := c.Locals("id")
+	user_id := fmt.Sprintf("%v", uid)
+	cartTotal := new(model.CartTotal)
+
+	var cart []model.Cart
+	address := new(model.Address)
+
+	res := db.Where("user_id = ? ", user_id).Find(&cart).Error
+	if res != nil {
+		fmt.Println(res)
+	}
+	total := 0.0
+	for _, v := range cart {
+
+		total = total + v.Total
+
+	}
+	i, err := strconv.Atoi(user_id)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	db.First(&cartTotal, "cart_id = ?", user_id)
+	fmt.Println(cartTotal.ID)
+	if cartTotal.ID == 0 {
+		cartTotal.CartID = i
+		cartTotal.Total = total
+
+		db.Save(cartTotal)
+	} else {
+
+		db.Model(&model.CartTotal{}).Where("cart_id = ?", user_id).Update("total", total)
+	}
+
+	res = db.Where("user_id = ? ", user_id).Find(&address).Error
+	fmt.Println(address)
+
+	fmt.Println(total)
+	fmt.Println(cart)
+	return c.JSON(fiber.Map{
+		"cart":    cart,
+		"address": address,
+		"total":   total,
 	})
 }

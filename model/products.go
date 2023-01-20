@@ -21,7 +21,7 @@ type ProductImage struct {
 
 type Cart struct {
 	gorm.Model
-
+	CartID    int `gorm:"auto_increment"`
 	UserId    string
 	ProductId uint
 	Quantity  int
@@ -52,4 +52,10 @@ type CombinedProductInfo struct {
 	ImageOne        string  `json:"img_one"`
 	ImageTwo        string  `json:"img_two"`
 	ImageThree      string  `json:"img_three"`
+}
+
+type CartTotal struct {
+	gorm.Model
+	CartID int     `json:"-"`
+	Total  float64 `json:"-"`
 }

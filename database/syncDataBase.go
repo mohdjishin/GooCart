@@ -15,4 +15,7 @@ func SyncDatabase() {
 
 	db.AutoMigrate(&model.Cart{})
 	db.AutoMigrate(&model.Order{})
+	db.AutoMigrate(&model.CartTotal{})
+	// db.AutoMigrate(&model.CheckOut{})
+	// db.AutoMigrate(&model.DirectIdCheckout{})
 }
