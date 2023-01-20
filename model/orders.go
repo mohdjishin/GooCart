@@ -17,12 +17,19 @@ type Order struct {
 	Quantity int     `json:"quantity"`
 	Price    float64 `json:"price"`
 
-	Total  float64
-	Status string `json:"status"`
+	Total           float64
+	ShippmentStatus string `json:"status"`
 
-	PaymentStatus string
-	Aproveled     bool
+	PaymentStatus bool `json:"payment_status"`
+	Aproveled     bool `json:"approved"`
 }
 
-type InstentOrder struct {
+type OrderRespAdmin struct {
+	OrderID       uint   `json:"order_id"`
+	UserID        uint   `json:"user_id"`
+	ProductID     uint   `json:"product_id"`
+	Quantity      int    `json:"quantity"`
+	Price         int    `json:"price"`
+	Status        string `json:"status"`
+	PaymentStatus bool   `json:"payment_status"`
 }

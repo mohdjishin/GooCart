@@ -3,11 +3,9 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"os"
-	"time"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
@@ -86,22 +84,6 @@ func Login(c *fiber.Ctx) error {
 	fmt.Println(usr.ID)
 
 	// create tokem
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-
-		"role": "admin",
-		"sub":  usr.ID,
-		"exp":  time.Now().Add(time.Hour * 5).Unix(),
-	})
-
-	fmt.Println(token.Valid)
-	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
-	fmt.Println(tokenString)
-	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-
-			"message": "Issue generating token",
-		})
-	}
 
 	// set to cookie
 
@@ -110,7 +92,12 @@ func Login(c *fiber.Ctx) error {
 	// 	Value:    tokenString,
 	// 	HTTPOnly: true,
 	// })
-
+	tokenString, errMessage := utils.GenJwtToken("admin", usr.ID, 86400)
+	if errMessage != "" {
+		return c.Status(http.StatusOK).JSON(fiber.Map{
+			"message": errMessage,
+		})
+	}
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"access_tokem": tokenString,
 	})
@@ -176,4 +163,45 @@ func ViewUsers(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(comb)
 
+}
+
+func Logout(c *fiber.Ctx) error {
+	userId := c.Locals("id")
+	usr_id := fmt.Sprintf("%v", userId)
+
+	u64, err := strconv.ParseUint(usr_id, 10, 32)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	tokenString, errMessage := utils.GenJwtToken("admin", uint(u64), 1)
+	if errMessage != "" {
+		return c.Status(http.StatusOK).JSON(fiber.Map{
+			"message": errMessage,
+		})
+	}
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"access_tokem": tokenString,
+	})
+
+}
+
+func ViewOrders(c *fiber.Ctx) error {
+
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+
+	var orders []model.Order
+
+	db.Find(&orders)
+	fmt.Println(orders)
+
+	extracttedOrderInfo := utils.ExtractOrderInfo(orders)
+
+	return c.Status(200).JSON(extracttedOrderInfo)
+
+}
+
+func DeliveryStatusUpdate(c *fiber.Ctx) error {
+	return nil
 }

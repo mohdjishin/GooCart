@@ -184,6 +184,22 @@ func ExtractProImage(proImg []model.ProductImage) []ProductImageInfo {
 	}
 	return productImages
 }
+func ExtractOrderInfo(order []model.Order) []model.OrderRespAdmin {
+	var orderInfo []model.OrderRespAdmin
+	for _, or := range order {
+		orderInfo = append(orderInfo, model.OrderRespAdmin{
+
+			OrderID:       or.ID,
+			ProductID:     or.ProductID,
+			UserID:        or.UserID,
+			Quantity:      or.Quantity,
+			Price:         int(or.Total),
+			Status:        or.ShippmentStatus,
+			PaymentStatus: or.PaymentStatus,
+		})
+	}
+	return orderInfo
+}
 
 func CombinePRoductAndProductImage(proInfo []ProductInfo, proimageInfo []ProductImageInfo) []CombinedProductInfo {
 	var combined []CombinedProductInfo

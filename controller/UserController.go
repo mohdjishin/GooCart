@@ -3,12 +3,9 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
@@ -124,14 +121,12 @@ func UserLogin(c *fiber.Ctx) error {
 	fmt.Println(usr.ID)
 
 	// create tokem
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub":  usr.ID,
-		"role": "user",
-		"exp":  time.Now().Add(time.Hour * 5).Unix(),
-	})
-
-	fmt.Println(token.Valid)
-	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+	tokenString, errMessage := utils.GenJwtToken("user", usr.ID, 86400)
+	if errMessage != "" {
+		return c.Status(http.StatusOK).JSON(fiber.Map{
+			"message": errMessage,
+		})
+	}
 	fmt.Println(tokenString)
 	if err != nil {
 
@@ -216,21 +211,6 @@ func EditUserInfo(c *fiber.Ctx) error {
 	if err := c.BodyParser(address); err != nil {
 		return c.Status(500).SendString(err.Error())
 	}
-
-	fmt.Println(user.Name)
-
-	fmt.Println(user.Password)
-	fmt.Println(user.Phone)
-
-	fmt.Println(user.CountryCode)
-
-	fmt.Println(address.HouseName)
-
-	fmt.Println(address.Street)
-
-	fmt.Println(address.City)
-	fmt.Println(address.State)
-	fmt.Println(address.Pin)
 
 	userInfo := new(model.Users)
 
@@ -387,6 +367,7 @@ func OrderFromCart(c *fiber.Ctx) error {
 		str := strconv.Itoa(int(id))
 		orders.OrderId = str[:7]
 		orders.ProductID = c.ProductId
+		orders.ShippmentStatus = "processing"
 		userID, err := strconv.ParseUint(c.UserId, 10, 32)
 		if err != nil {
 			fmt.Println(err)
@@ -395,9 +376,10 @@ func OrderFromCart(c *fiber.Ctx) error {
 		orders.UserID = uint(userID)
 		orders.AddressID = uint(userID)
 		orders.Price = c.Price
+		orders.ShippmentStatus = "processing"
 
 		orders.Quantity = c.Quantity
-		orders.PaymentStatus = "pending"
+		orders.PaymentStatus = false
 
 		orders.Total = c.Total * float64(c.Quantity)
 		db.Create(&orders)
@@ -456,4 +438,26 @@ func Checkout(c *fiber.Ctx) error {
 		"address": address,
 		"total":   total,
 	})
+}
+
+func UserLogout(c *fiber.Ctx) error {
+
+	userId := c.Locals("id")
+	usr_id := fmt.Sprintf("%v", userId)
+
+	u64, err := strconv.ParseUint(usr_id, 10, 32)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	tokenString, errMessage := utils.GenJwtToken("user", uint(u64), 1)
+	if errMessage != "" {
+		return c.Status(http.StatusOK).JSON(fiber.Map{
+			"message": errMessage,
+		})
+	}
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"access_tokem": tokenString,
+	})
+
 }
