@@ -16,11 +16,13 @@ func init() {
 
 func main() {
 
+	// utils.Payment("laptop", 40000)
 	app := fiber.New()
 
 	routes.AdminRoute(app)
 
 	routes.UserRoute(app)
+
 	log.Fatal(app.Listen(":" + os.Getenv("PORT")))
 
 }

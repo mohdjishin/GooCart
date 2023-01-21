@@ -21,7 +21,7 @@ type Order struct {
 	ShippmentStatus string `json:"status"`
 
 	PaymentStatus bool `json:"payment_status"`
-	Aproveled     bool `json:"approved"`
+	Aprovel       bool `json:"approvel"`
 }
 
 type OrderRespAdmin struct {

@@ -16,6 +16,7 @@ type Users struct {
 	Verified    bool
 	OTP         string
 	Status      bool `json:"status"`
+	Blocked     bool `json:"block_status"`
 }
 
 type Address struct {
