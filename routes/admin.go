@@ -22,6 +22,6 @@ func AdminRoute(app *fiber.App) {
 	app.Get("/admin_panel/orders", middleware.RequireAdminAuth, controller.ViewOrders)
 	app.Get("/admin_panel/logout", middleware.RequireAdminAuth, controller.Logout)
 
-	app.Post("/admin/delivery_status", controller.DeliveryStatusUpdate)
+	app.Post("/admin/delivery_status", middleware.RequreUserAuth, controller.DeliveryStatusUpdate)
 
 }

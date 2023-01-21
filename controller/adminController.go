@@ -203,5 +203,52 @@ func ViewOrders(c *fiber.Ctx) error {
 }
 
 func DeliveryStatusUpdate(c *fiber.Ctx) error {
-	return nil
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	type delStatus struct {
+		Id              int    `json:"id"`
+		ProID           int    `json:"pro_id"`
+		ShippmentStatus string `json:"shipment_status"`
+	}
+
+	order := new(model.Order)
+
+	st := new(delStatus)
+
+	if err := c.BodyParser(st); err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	if st.ShippmentStatus == "processing" || st.ShippmentStatus == "delivered" || st.ShippmentStatus == "shipped" || st.ShippmentStatus == "deleyed" || st.ShippmentStatus == "close" {
+		db.First(&order, "id = ? and product_id= ?", st.Id, st.ProID)
+
+		if order.ID == 0 {
+			return c.Status(404).JSON(fiber.Map{
+				"message": "not fount",
+			})
+		}
+
+		fmt.Println(order)
+		if st.ShippmentStatus == "close" {
+			db.Model(&order).Where("id = ? and product_id= ?", st.Id, st.ProID).Update("shippment_status", "closed")
+
+			db.Delete(&order, "id = ? and product_id= ?", st.Id, st.ProID)
+			return c.Status(200).JSON(fiber.Map{
+				"message": "order closed",
+			})
+		}
+
+		db.Model(&order).Where("id = ? and product_id= ?", st.Id, st.ProID).Update("shippment_status", st.ShippmentStatus)
+
+		return c.Status(200).JSON(fiber.Map{
+			"meaage": "status updated",
+		})
+	}
+
+	// processing
+
+	return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+		"message": "shippment status error",
+	})
+
 }
