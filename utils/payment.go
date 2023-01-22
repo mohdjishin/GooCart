@@ -1,17 +1,15 @@
 package utils
 
 import (
-	"fmt"
 	"log"
 	"os"
 
-	"github.com/gofiber/fiber"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/stripe/stripe-go/v74"
 	"github.com/stripe/stripe-go/v74/checkout/session"
 )
 
-func Payment(products string, totalAmount float64) {
+func Payment(products string, totalAmount float64) string {
 	total := totalAmount
 	stripe.Key = os.Getenv("PAYMENT_SEC_KEY")
 	params := &stripe.CheckoutSessionParams{
@@ -28,8 +26,9 @@ func Payment(products string, totalAmount float64) {
 				Quantity: stripe.Int64(1),
 			},
 		},
-		SuccessURL: stripe.String("http://localhost:3001/utils/success.html"),
-		CancelURL:  stripe.String("http://localhost:3001/utils/cancel.html"),
+		SuccessURL:        stripe.String("http://localhost:3001/user/order_from_cart"),
+		CancelURL:         stripe.String("http://localhost:3001/utils/cancel.html"),
+		ClientReferenceID: stripe.String("1"),
 	}
 
 	s, err := session.New(params)
@@ -37,9 +36,13 @@ func Payment(products string, totalAmount float64) {
 	if err != nil {
 		log.Printf("session.New: %v", err)
 	}
-	fmt.Println(fiber.Map{"message": "success",
-		"products": "orders",
-		"total":    total,
-		"url":      s.URL,
-	})
+	// fmt.Println(fiber.Map{"message": "success",
+	// 	"products": "orders",
+	// 	"total":    total,
+	// 	"url":      s.URL,
+	// })
+
+	// fmt.Println(s.PaymentIntent)
+
+	return s.URL
 }

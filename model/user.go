@@ -15,8 +15,9 @@ type Users struct {
 	CountryCode string `json:"country_code"`
 	Verified    bool
 	OTP         string
-	Status      bool `json:"status"`
-	Blocked     bool `json:"block_status"`
+	Status      bool   `json:"status"`
+	Blocked     bool   `json:"block_status"`
+	Refresh     string `json:"refresh"`
 }
 
 type Address struct {

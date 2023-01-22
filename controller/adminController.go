@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
@@ -82,6 +83,15 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	fmt.Println(usr.ID)
+	// refresh token
+	uuidv4, _ := uuid.NewRandom()
+
+	err = db.Model(&usr).Where("id = ?", usr.ID).Update("refresh", uuidv4.String()).Error
+	if err != nil {
+		fmt.Println(err)
+
+	}
+	// create
 
 	// create tokem
 
@@ -99,7 +109,8 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"access_tokem": tokenString,
+		"access_token":  tokenString,
+		"refresh_token": uuidv4,
 	})
 
 	// c.Send([]byte("cookie send"))
@@ -251,4 +262,49 @@ func DeliveryStatusUpdate(c *fiber.Ctx) error {
 		"message": "shippment status error",
 	})
 
+}
+func ManageUser(c *fiber.Ctx) error {
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	user := new(model.Users)
+
+	type manageUser struct {
+		ID    int  `json:"id"`
+		Block bool `json:"block"`
+	}
+	u := new(manageUser)
+	if err := c.BodyParser(u); err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	db.First(&user, u.ID)
+
+	user.Blocked = u.Block
+	db.Save(&user)
+	return c.Status(200).JSON(user)
+
+}
+
+func AdminRefresh(c *fiber.Ctx) error {
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	type refreshToken struct {
+		Access_token  string `json:"access_token"`
+		Refresh_token string `json:"refresh_token"`
+	}
+	rt := new(refreshToken)
+
+	if err := c.BodyParser(rt); err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	err, accessToken, rfToken := utils.RefreshToken(db, rt.Refresh_token, rt.Access_token)
+
+	if err != "" {
+		return c.Status(400).JSON(fiber.Map{"message": err})
+	}
+	return c.Status(200).JSON(fiber.Map{
+		"access_token":  accessToken,
+		"refresh_token": rfToken,
+	})
 }

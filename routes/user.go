@@ -8,9 +8,9 @@ import (
 
 func UserRoute(app *fiber.App) {
 
-	app.Post("/user_registration", controller.UserSignup) //json
-	app.Post("/user_signin", controller.UserLogin)        //json
-	app.Get("/home", middleware.RequreUserAuth, controller.Home)
+	app.Post("/user/registration", controller.UserSignup) //json
+	app.Post("/user/signin", controller.UserLogin)        //json
+	app.Get("/user/home", middleware.RequreUserAuth, controller.Home)
 
 	app.Post("/verification", middleware.RequreUserAuth, controller.Verification)     //json
 	app.Put("/user/user_account", middleware.RequreUserAuth, controller.EditUserInfo) //json
@@ -22,8 +22,11 @@ func UserRoute(app *fiber.App) {
 	app.Get("/user/search/:key", controller.SearchProduct)
 
 	app.Get("/user/order_from_cart", middleware.RequreUserAuth, controller.OrderFromCart)
+	app.Get("/user/logout", middleware.RequireAdminAuth, controller.UserLogout)
 	// app.Get("/user/instant_buy_checkout/:id", middleware.RequreUserAuth, controller.BuytoCheckout)
 	// app.Get("/user/remove_from_checkout/:id", middleware.RequreUserAuth, controller.RemovetoCheckout)
 
 	app.Get("/user/checkout", middleware.RequreUserAuth, controller.Checkout)
+	app.Post("/user/refresh", controller.Refresh)
+
 }

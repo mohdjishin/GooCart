@@ -6,6 +6,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
+	"github.com/mohdjishin/GoCart/model"
+	"gorm.io/gorm"
 )
 
 func GenJwtToken(role string, userId uint, duration int) (string, string) {
@@ -25,5 +28,137 @@ func GenJwtToken(role string, userId uint, duration int) (string, string) {
 	}
 
 	return tokenString, ""
+
+}
+
+func RefreshToken(db *gorm.DB, refresh string, accessToken string) (string, string, string) {
+
+	tokenString := accessToken
+	if tokenString == "" {
+		return "no token found", "", ""
+	}
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method : %v", token.Header)
+		}
+
+		return []byte(os.Getenv("SECRET")), nil
+
+	})
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		// check exp
+
+		if claims["role"] != "user" {
+
+			return "no user privileges", "", ""
+
+		}
+
+		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			return "unauthorized", "", ""
+		}
+
+		// find the user with token sub
+
+		user := new(model.Users)
+
+		db.First(&user, claims["sub"])
+
+		if user.ID == 0 {
+
+			return "user not found", "", ""
+
+		}
+
+		// attach to req
+		if user.Refresh == refresh {
+			newToken, err := GenJwtToken("user", user.ID, 86400)
+			if err != "" {
+				return err, "", ""
+			}
+
+			uuidv4, _ := uuid.NewRandom()
+
+			errr := db.Model(&user).Where("id = ?", user.ID).Update("refresh", uuidv4).Error
+			if errr != nil {
+				fmt.Println(err)
+
+			}
+
+			return "", newToken, uuidv4.String()
+		}
+
+	}
+	fmt.Println(err)
+	return "unauthorized", "", ""
+
+}
+
+func AdminRefreshToken(db *gorm.DB, refresh string, accessToken string) (string, string, string) {
+
+	tokenString := accessToken
+	if tokenString == "" {
+		return "no token found", "", ""
+	}
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method : %v", token.Header)
+		}
+
+		return []byte(os.Getenv("SECRET")), nil
+
+	})
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		// check exp
+
+		if claims["role"] != "admin" {
+
+			return "no user privileges", "", ""
+
+		}
+
+		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			return "unauthorized", "", ""
+		}
+
+		// find the user with token sub
+
+		user := new(model.Admin)
+
+		db.First(&user, claims["sub"])
+
+		if user.ID == 0 {
+
+			return "user not found", "", ""
+
+		}
+
+		// attach to req
+		if user.Refresh == refresh {
+			newToken, err := GenJwtToken("admin", user.ID, 86400)
+			if err != "" {
+				return err, "", ""
+			}
+
+			uuidv4, _ := uuid.NewRandom()
+
+			errr := db.Model(&user).Where("id = ?", user.ID).Update("refresh", uuidv4).Error
+			if errr != nil {
+				fmt.Println(err)
+
+			}
+
+			return "", newToken, uuidv4.String()
+		}
+
+	}
+	fmt.Println(err)
+	return "unauthorized", "", ""
 
 }

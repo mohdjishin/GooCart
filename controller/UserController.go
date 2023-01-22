@@ -117,9 +117,23 @@ func UserLogin(c *fiber.Ctx) error {
 			"message": "you have been restricted",
 		})
 	}
+	if usr.Blocked == true {
 
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"message": "please contact admin",
+		})
+
+	}
 	fmt.Println(usr.ID)
+	// refresh token
 
+	uuidv4, _ := uuid.NewRandom()
+
+	err = db.Model(&usr).Where("id = ?", usr.ID).Update("refresh", uuidv4.String()).Error
+	if err != nil {
+		fmt.Println(err)
+
+	}
 	// create tokem
 	tokenString, errMessage := utils.GenJwtToken("user", usr.ID, 86400)
 	if errMessage != "" {
@@ -142,7 +156,8 @@ func UserLogin(c *fiber.Ctx) error {
 	// })
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"access_tokem": tokenString,
+		"access_tokem":  tokenString,
+		"refresh_token": uuidv4,
 	})
 
 	// c.Send([]byte("cookie send"))
@@ -433,10 +448,13 @@ func Checkout(c *fiber.Ctx) error {
 
 	fmt.Println(total)
 	fmt.Println(cart)
+
+	paymentLink := utils.Payment("products", total)
 	return c.JSON(fiber.Map{
-		"cart":    cart,
-		"address": address,
-		"total":   total,
+		"cart":         cart,
+		"address":      address,
+		"total":        total,
+		"payment_link": paymentLink,
 	})
 }
 
@@ -457,7 +475,31 @@ func UserLogout(c *fiber.Ctx) error {
 		})
 	}
 	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"access_tokem": tokenString,
+		"access_token": tokenString,
 	})
 
+}
+
+func Refresh(c *fiber.Ctx) error {
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	type refreshToken struct {
+		Access_token  string `json:"access_token"`
+		Refresh_token string `json:"refresh_token"`
+	}
+	rt := new(refreshToken)
+
+	if err := c.BodyParser(rt); err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	err, accessToken, rfToken := utils.RefreshToken(db, rt.Refresh_token, rt.Access_token)
+
+	if err != "" {
+		return c.Status(400).JSON(fiber.Map{"message": err})
+	}
+	return c.Status(200).JSON(fiber.Map{
+		"access_token":  accessToken,
+		"refresh_token": rfToken,
+	})
 }
