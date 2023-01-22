@@ -10,23 +10,26 @@ func UserRoute(app *fiber.App) {
 
 	app.Post("/user/registration", controller.UserSignup) //json
 	app.Post("/user/signin", controller.UserLogin)        //json
-	app.Get("/user/home", middleware.RequreUserAuth, controller.Home)
+	app.Post("/user/refresh", controller.Refresh)
 
-	app.Post("/verification", middleware.RequreUserAuth, controller.Verification)     //json
-	app.Put("/user/user_account", middleware.RequreUserAuth, controller.EditUserInfo) //json
-	app.Get("/user/view_products", middleware.RequreUserAuth, controller.ViewProducts)
+	user := app.Group("/user", middleware.RequreUserAuth)
 
-	app.Get("/user/addtocart/:id", middleware.RequreUserAuth, controller.AddToCart)
+	user.Get("/home", controller.Home)
 
-	app.Post("/user/get_by_category", middleware.RequreUserAuth, controller.GetbyCategory)
-	app.Get("/user/search/:key", controller.SearchProduct)
+	user.Post("/verification", controller.Verification) //json
+	user.Put("/user_account", controller.EditUserInfo)  //json
+	user.Get("/view_products", controller.ViewProducts)
 
-	app.Get("/user/order_from_cart", middleware.RequreUserAuth, controller.OrderFromCart)
-	app.Get("/user/logout", middleware.RequireAdminAuth, controller.UserLogout)
+	user.Get("/addtocart/:id", controller.AddToCart)
+
+	user.Post("/get_by_category", controller.GetbyCategory)
+	app.Get("/search/:key", controller.SearchProduct)
+
+	user.Get("/order_from_cart", controller.OrderFromCart)
+	user.Get("/logout", controller.UserLogout)
+
+	user.Get("/checkout", controller.Checkout)
 	// app.Get("/user/instant_buy_checkout/:id", middleware.RequreUserAuth, controller.BuytoCheckout)
 	// app.Get("/user/remove_from_checkout/:id", middleware.RequreUserAuth, controller.RemovetoCheckout)
-
-	app.Get("/user/checkout", middleware.RequreUserAuth, controller.Checkout)
-	app.Post("/user/refresh", controller.Refresh)
 
 }
