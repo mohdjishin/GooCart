@@ -503,3 +503,46 @@ func Refresh(c *fiber.Ctx) error {
 		"refresh_token": rfToken,
 	})
 }
+
+func GenerateInvoice(c *fiber.Ctx) error {
+
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	orderId := c.Params("order_id")
+
+	bill := new(model.Invoice)
+	user := new(model.Users)
+
+	var order model.Order
+
+	var prod model.Products
+
+	db.Find(&order, "order_id =?", orderId)
+
+	db.First(&user, order.UserID)
+
+	db.Find(&prod, order.ProductID)
+
+	bill.Name = user.Name
+	bill.Phone = user.CountryCode + user.Phone
+	bill.OrderId = order.OrderId
+
+	fmt.Println(order)
+	total := prod.Price * float64(order.Quantity)
+
+	bill.ProductName = prod.Product_Name
+
+	bill.Price = fmt.Sprintf("%v", order.Price)
+	bill.Quantity = fmt.Sprintf("%v", order.Quantity)
+	bill.Total = fmt.Sprintf("%v", total)
+
+	fmt.Println(prod)
+
+	utils.GenerateInvoice(*bill)
+
+	// combineOrderAndProd := utils.CombinedPRoductOrder(order, prod)
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "success",
+	})
+}

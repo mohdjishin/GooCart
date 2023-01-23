@@ -215,3 +215,18 @@ func CombinePRoductAndProductImage(proInfo []ProductInfo, proimageInfo []Product
 	fmt.Println(combined)
 	return combined
 }
+
+// func CombinedPRoductOrder(order model.Order, products model.Products) []model.Invoice {
+// 	var combined []model.Invoice
+// 	for _, u := range order {
+// 		for _, a := range products {
+
+// 			if u.ProductID == a.ID {
+
+// 				combined = append(combined, model.Invoice{OrderId: u.OrderId, ProductName: a.Product_Name, Quantity: u.Quantity, Price: a.Price})
+// 			}
+// 		}
+// 	}
+// 	fmt.Println(combined)
+// 	return combined
+// }

@@ -33,3 +33,14 @@ type OrderRespAdmin struct {
 	Status        string `json:"status"`
 	PaymentStatus bool   `json:"payment_status"`
 }
+
+type Invoice struct {
+	OrderId     string
+	ProductName string
+
+	Quantity string
+	Price    string
+	Total    string
+	Name     string
+	Phone    string
+}
