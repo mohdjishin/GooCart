@@ -31,6 +31,8 @@ func UserRoute(app *fiber.App) {
 	user.Get("/checkout", controller.Checkout)
 
 	user.Get("/generate_invoice/:order_id", controller.GenerateInvoice)
+
+	user.Get("/removefromcart/:id", controller.RemoveFromCart)
 	// app.Get("/user/instant_buy_checkout/:id", middleware.RequreUserAuth, controller.BuytoCheckout)
 	// app.Get("/user/remove_from_checkout/:id", middleware.RequreUserAuth, controller.RemovetoCheckout)
 

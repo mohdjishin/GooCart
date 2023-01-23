@@ -546,3 +546,72 @@ func GenerateInvoice(c *fiber.Ctx) error {
 		"message": "success",
 	})
 }
+
+func RemoveFromCart(c *fiber.Ctx) error {
+
+	db := database.OpenDb()
+	defer database.CloseDb(db)
+	user_Id := c.Locals("id")
+	usr_id := fmt.Sprintf("%v", user_Id)
+
+	prod := new(model.Products)
+
+	product_Id := c.Params("id")
+	db.First(&prod, product_Id)
+	fmt.Println("s")
+	// db.Find(&prod, proId)
+
+	cart := new(model.Cart)
+
+	prodImg := new(model.ProductImage)
+
+	cartTotal := new(model.CartTotal)
+
+	res := db.First(&prodImg, "product_id =? ", product_Id)
+	if res.Error != nil {
+		return c.Status(200).JSON(fiber.Map{
+
+			"message": "no product found with pro_id :" + product_Id,
+		})
+
+	}
+
+	res = db.Where("user_id = ? AND product_id >= ?", usr_id, product_Id).First(&cart)
+
+	if res.Error != nil {
+		fmt.Println("ok, no product found..")
+	}
+
+	db.Where("cart_id = ?", cart.CartID).First(&cart)
+
+	if cart.ID == 0 {
+		fmt.Println("no item found")
+	}
+
+	if cart.Quantity > 1 {
+
+		db.Model(&cart).Update("quantity", cart.Quantity-1)
+		ttl := cart.Quantity * int(cart.Price)
+		db.Model(&cart).Update("total", ttl)
+		db.Model(&cartTotal).Update("total", ttl)
+
+		return c.Status(200).JSON(fiber.Map{
+			"message": "item deteled",
+			"cart":    cart,
+		})
+
+	} else if cart.Quantity == 1 {
+		db.Delete(&cart)
+		db.Delete(&cartTotal)
+		return c.Status(200).JSON(fiber.Map{
+			"message": "item removed",
+			"cart":    cart,
+		})
+
+	}
+	fmt.Println(cartTotal.CartID)
+	db.Delete(&cartTotal)
+	return c.Status(200).JSON(fiber.Map{
+		"message": "no item found",
+	})
+}
