@@ -23,7 +23,7 @@ func AddProducts(c *fiber.Ctx) error {
 	product := new(model.Products)
 
 	product.Product_Name = c.FormValue("pro_name")
-	fmt.Println(product.Product_Name)
+
 	if price, err := strconv.ParseFloat(c.FormValue("price"), 64); err == nil {
 		product.Price = price
 	}
@@ -56,7 +56,6 @@ func AddProducts(c *fiber.Ctx) error {
 		})
 	}
 
-	fmt.Println(product.ID)
 	productImage := new(model.ProductImage)
 
 	productImage.ProductId = product.ID
@@ -128,10 +127,6 @@ func UpdatePro(c *fiber.Ctx) error {
 	if e.Error != nil {
 		return c.SendStatus(http.StatusBadRequest)
 	}
-	fmt.Println(pImages.ImageOne)
-
-	fmt.Println(pImages.ImgTwo)
-	fmt.Println(pImages.ImgThree)
 
 	// err := os.Remove("public/upload/" + pImages.ImageOne)
 	// if err != nil {
@@ -266,9 +261,6 @@ func UpdatePro(c *fiber.Ctx) error {
 	pImages.ImgTwo = fileTwo.Filename
 	pImages.ImgThree = fileThree.Filename
 	fmt.Println("---------------")
-	fmt.Println(pImages.ImageOne)
-	fmt.Println(pImages.ImgTwo)
-	fmt.Println(pImages.ImgThree)
 
 	db.Save(&pImages)
 	db.Save(&pro)

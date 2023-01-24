@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -32,6 +33,7 @@ func Payment(products string, totalAmount float64) string {
 	}
 
 	s, err := session.New(params)
+	fmt.Println(s.PaymentStatus)
 
 	if err != nil {
 		log.Printf("session.New: %v", err)

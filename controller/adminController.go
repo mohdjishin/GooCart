@@ -24,9 +24,6 @@ func Signup(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
-	fmt.Println(user.Username)
-	fmt.Println(user.Email)
-	fmt.Println(user.Password)
 	// hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
@@ -35,7 +32,6 @@ func Signup(c *fiber.Ctx) error {
 		})
 
 	}
-	fmt.Println(hash)
 
 	usr := model.Admin{Username: user.Username, Password: string(hash), Email: user.Email}
 
@@ -55,7 +51,6 @@ func Signup(c *fiber.Ctx) error {
 func Login(c *fiber.Ctx) error {
 	db := database.OpenDb()
 	defer database.CloseDb(db)
-	fmt.Println("hh")
 
 	body := new(model.Admin)
 	// take data from req
@@ -72,7 +67,6 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	// check pass
-	fmt.Println(body.Password)
 
 	err := bcrypt.CompareHashAndPassword([]byte(usr.Password), []byte(body.Password))
 	if err != nil {
@@ -118,7 +112,6 @@ func Login(c *fiber.Ctx) error {
 }
 
 func Validate(c *fiber.Ctx) error {
-	fmt.Println("hhhh")
 
 	user := c.Locals("id")
 	fmt.Println(user)
@@ -165,7 +158,6 @@ func ViewUsers(c *fiber.Ctx) error {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(address)
 
 	infoWithoutAddress := utils.ExtractPersonalInfo(user)
 	infowithPersonal := utils.ExtractAdresses(address)
@@ -205,7 +197,6 @@ func ViewOrders(c *fiber.Ctx) error {
 	var orders []model.Order
 
 	db.Find(&orders)
-	fmt.Println(orders)
 
 	extracttedOrderInfo := utils.ExtractOrderInfo(orders)
 
@@ -239,7 +230,6 @@ func DeliveryStatusUpdate(c *fiber.Ctx) error {
 			})
 		}
 
-		fmt.Println(order)
 		if st.ShippmentStatus == "close" {
 			db.Model(&order).Where("id = ? and product_id= ?", st.Id, st.ProID).Update("shippment_status", "closed")
 

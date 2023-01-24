@@ -28,14 +28,6 @@ func UserSignup(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
-	// fmt.Println(user.ID)
-	// fmt.Println(user.Name)
-	// fmt.Println(user.Username)
-	// fmt.Println(user.Email)
-	// fmt.Println(user.Password)
-	// fmt.Println(user.CountryCode)
-	// fmt.Println(user.Phone)
-
 	fmt.Println("+" + user.CountryCode + user.Phone)
 
 	// utils.SendOtp(("+" + user.CountryCode + user.Phone))
@@ -65,9 +57,19 @@ func UserSignup(c *fiber.Ctx) error {
 		})
 
 	}
-	err = utils.SendSMSOTP(("+" + user.CountryCode + user.Phone), OTP)
-	if err != nil {
-		fmt.Println(err)
+
+	if true {
+		stst := utils.SendOtp("+" + user.CountryCode + user.Phone)
+		if stst {
+			fmt.Println("otp sented sccessfully")
+		}
+
+	} else {
+		err = utils.SendSMSOTP(("+" + user.CountryCode + user.Phone), OTP)
+		if err != nil {
+			fmt.Println(err)
+
+		}
 
 	}
 
@@ -192,13 +194,19 @@ func Verification(c *fiber.Ctx) error {
 
 	db.First(&user, userId)
 
-	// status := utils.CheckOtp(("+" + user.CountryCode + user.Phone), otp.OTP)
-	if user.OTP == otp.OTP {
-		status = true
-		utils.WelcomeMsg("+" + user.CountryCode + user.Phone)
-	}
+	if true {
+		status := utils.CheckOtp(("+" + user.CountryCode + user.Phone), otp.OTP)
+		user.Verified = status
 
-	user.Verified = status
+	} else {
+		if user.OTP == otp.OTP {
+			status = true
+			utils.WelcomeMsg("+" + user.CountryCode + user.Phone)
+		}
+
+		user.Verified = status
+
+	}
 
 	db.Save(&user)
 
@@ -230,13 +238,10 @@ func EditUserInfo(c *fiber.Ctx) error {
 	userInfo := new(model.Users)
 
 	db.Find(&userInfo, userId)
-	fmt.Println(userInfo)
 
 	addressInfo := new(model.Address)
 
 	db.Find(&addressInfo, userId)
-
-	fmt.Println(addressInfo)
 
 	// get password and hash it
 
@@ -323,7 +328,7 @@ func AddToCart(c *fiber.Ctx) error {
 
 		cart.UserId = usr_id
 		cart.CartID = i
-		fmt.Println("hhhh")
+
 		cart.ProductId = uint(prod.ID)
 		cart.Price = prod.Price
 		cart.Image = prodImg.ImageOne
@@ -338,7 +343,7 @@ func AddToCart(c *fiber.Ctx) error {
 	}
 	cart.CartID = i
 	cart.UserId = usr_id
-	fmt.Println("hhhh")
+
 	cart.ProductId = uint(prod.ID)
 
 	cart.Image = prodImg.ImageOne
@@ -394,7 +399,6 @@ func OrderFromCart(c *fiber.Ctx) error {
 		orders.ShippmentStatus = "processing"
 
 		orders.Quantity = c.Quantity
-		orders.PaymentStatus = false
 
 		orders.Total = c.Total * float64(c.Quantity)
 		db.Create(&orders)
@@ -444,10 +448,6 @@ func Checkout(c *fiber.Ctx) error {
 	}
 
 	res = db.Where("user_id = ? ", user_id).Find(&address).Error
-	fmt.Println(address)
-
-	fmt.Println(total)
-	fmt.Println(cart)
 
 	paymentLink := utils.Payment("products", total)
 	return c.JSON(fiber.Map{
@@ -536,8 +536,6 @@ func GenerateInvoice(c *fiber.Ctx) error {
 	bill.Quantity = fmt.Sprintf("%v", order.Quantity)
 	bill.Total = fmt.Sprintf("%v", total)
 
-	fmt.Println(prod)
-
 	utils.GenerateInvoice(*bill)
 
 	// combineOrderAndProd := utils.CombinedPRoductOrder(order, prod)
@@ -558,7 +556,7 @@ func RemoveFromCart(c *fiber.Ctx) error {
 
 	product_Id := c.Params("id")
 	db.First(&prod, product_Id)
-	fmt.Println("s")
+
 	// db.Find(&prod, proId)
 
 	cart := new(model.Cart)

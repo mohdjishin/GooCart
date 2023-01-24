@@ -10,23 +10,23 @@ func AdminRoute(app *fiber.App) {
 
 	// app.Post("/admin/signup", controller.Signup)
 
+	app.Post("/admins_login", controller.Login) //json
 	admin := app.Group("/admin", middleware.RequireAdminAuth)
 
-	app.Post("/admin/login", controller.Login) //json
-	app.Post("/admin/refresh", controller.AdminRefresh)
-	admin.Get("/admin/admin_panel", controller.Validate)                             //nothing much
-	admin.Post("/admin/admin_panel/add_product", controller.AddProducts)             //formdata
-	admin.Put("/admin/admin_panel/products/edit_products/:id", controller.UpdatePro) // formdata
-	admin.Delete("/admin/admin_panel/products/delete_products/:id", controller.DelProduct)
-	admin.Get("/adminadmin_panel/view_users", controller.ViewUsers)
+	app.Post("/admins/refresh", controller.AdminRefresh)
+	admin.Get("/admin_panel", controller.Validate)                             //nothing much
+	admin.Post("/admin_panel/add_product", controller.AddProducts)             //formdata
+	admin.Put("/admin_panel/products/edit_products/:id", controller.UpdatePro) // formdata
+	admin.Delete("/admin_panel/products/delete_products/:id", controller.DelProduct)
+	admin.Get("/admin_panel/view_users", controller.ViewUsers)
 
-	admin.Post("/admin/admin_panel/user_management", controller.UserManagement)
+	admin.Post("admin_panel/user_management", controller.UserManagement)
 
-	admin.Get("/admin/admin_panel/orders", controller.ViewOrders)
-	admin.Get("/admin/admin_panel/logout", controller.Logout)
+	admin.Get("admin_panel/orders", controller.ViewOrders)
+	admin.Get("admin_panel/logout", controller.Logout)
 
-	admin.Post("/admin/admin_panel/delivery_status", controller.DeliveryStatusUpdate)
+	admin.Post("admin_panel/delivery_status", controller.DeliveryStatusUpdate)
 
-	admin.Post("/admin/admin_panel/blockuser", controller.ManageUser)
+	admin.Post("/admin_panel/blockuser", controller.ManageUser)
 
 }

@@ -189,13 +189,12 @@ func ExtractOrderInfo(order []model.Order) []model.OrderRespAdmin {
 	for _, or := range order {
 		orderInfo = append(orderInfo, model.OrderRespAdmin{
 
-			OrderID:       or.ID,
-			ProductID:     or.ProductID,
-			UserID:        or.UserID,
-			Quantity:      or.Quantity,
-			Price:         int(or.Total),
-			Status:        or.ShippmentStatus,
-			PaymentStatus: or.PaymentStatus,
+			OrderID:   or.ID,
+			ProductID: or.ProductID,
+			UserID:    or.UserID,
+			Quantity:  or.Quantity,
+			Price:     int(or.Total),
+			Status:    or.ShippmentStatus,
 		})
 	}
 	return orderInfo

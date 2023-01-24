@@ -9,7 +9,7 @@ import (
 func UserRoute(app *fiber.App) {
 
 	app.Post("/user/registration", controller.UserSignup) //json
-	app.Post("/user/signin", controller.UserLogin)        //json
+	app.Post("/user/login", controller.UserLogin)         //json
 	app.Post("/user/refresh", controller.Refresh)
 
 	user := app.Group("/user", middleware.RequreUserAuth)
@@ -21,6 +21,7 @@ func UserRoute(app *fiber.App) {
 	user.Get("/view_products", controller.ViewProducts)
 
 	user.Get("/addtocart/:id", controller.AddToCart)
+	user.Get("/removefromcart/:id", controller.RemoveFromCart)
 
 	user.Post("/get_by_category", controller.GetbyCategory)
 	app.Get("/search/:key", controller.SearchProduct)
@@ -32,7 +33,6 @@ func UserRoute(app *fiber.App) {
 
 	user.Get("/generate_invoice/:order_id", controller.GenerateInvoice)
 
-	user.Get("/removefromcart/:id", controller.RemoveFromCart)
 	// app.Get("/user/instant_buy_checkout/:id", middleware.RequreUserAuth, controller.BuytoCheckout)
 	// app.Get("/user/remove_from_checkout/:id", middleware.RequreUserAuth, controller.RemovetoCheckout)
 

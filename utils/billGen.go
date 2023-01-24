@@ -33,7 +33,7 @@ import (
 // }
 
 func GenerateInvoice(bill model.Invoice) {
-	fmt.Println("hello")
+
 	fmt.Println(bill)
 	m := pdf.NewMaroto(consts.Portrait, consts.A4)
 	currentTime := time.Now()
@@ -46,7 +46,7 @@ func GenerateInvoice(bill model.Invoice) {
 
 	BuildTotal(bill.Total, m)
 
-	err := m.OutputFileAndClose("pdf/sample.pdf")
+	err := m.OutputFileAndClose("media/pdf/sample.pdf")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -73,7 +73,7 @@ func buildHeading(date string, name string, phone string, m pdf.Maroto) {
 		m.Row(50, func() {
 			m.Col(12, func() {
 
-				err := m.FileImage("images/logo.png", props.Rect{
+				err := m.FileImage("media/images/logo.png", props.Rect{
 					Center:  true,
 					Percent: 100,
 				})

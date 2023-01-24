@@ -20,8 +20,7 @@ type Order struct {
 	Total           float64
 	ShippmentStatus string `json:"status"`
 
-	PaymentStatus bool `json:"payment_status"`
-	Aprovel       bool `json:"approvel"`
+	Aprovel bool `json:"approvel"`
 }
 
 type OrderRespAdmin struct {
