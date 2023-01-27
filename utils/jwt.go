@@ -49,7 +49,6 @@ func RefreshToken(db *gorm.DB, refresh string, accessToken string) (string, stri
 	})
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		// check exp
 
 		if claims["role"] != "user" {
 
@@ -61,8 +60,6 @@ func RefreshToken(db *gorm.DB, refresh string, accessToken string) (string, stri
 			return "unauthorized", "", ""
 		}
 
-		// find the user with token sub
-
 		user := new(model.Users)
 
 		db.First(&user, claims["sub"])
@@ -73,7 +70,6 @@ func RefreshToken(db *gorm.DB, refresh string, accessToken string) (string, stri
 
 		}
 
-		// attach to req
 		if user.Refresh == refresh {
 			newToken, err := GenJwtToken("user", user.ID, 86400)
 			if err != "" {
@@ -115,7 +111,6 @@ func AdminRefreshToken(db *gorm.DB, refresh string, accessToken string) (string,
 	})
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		// check exp
 
 		if claims["role"] != "admin" {
 
@@ -127,8 +122,6 @@ func AdminRefreshToken(db *gorm.DB, refresh string, accessToken string) (string,
 			return "unauthorized", "", ""
 		}
 
-		// find the user with token sub
-
 		user := new(model.Admin)
 
 		db.First(&user, claims["sub"])
@@ -139,7 +132,6 @@ func AdminRefreshToken(db *gorm.DB, refresh string, accessToken string) (string,
 
 		}
 
-		// attach to req
 		if user.Refresh == refresh {
 			newToken, err := GenJwtToken("admin", user.ID, 86400)
 			if err != "" {

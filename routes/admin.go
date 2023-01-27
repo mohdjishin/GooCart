@@ -14,9 +14,9 @@ func AdminRoute(app *fiber.App) {
 	admin := app.Group("/admin", middleware.RequireAdminAuth)
 
 	app.Post("/admins/refresh", controller.AdminRefresh)
-	admin.Get("/admin_panel", controller.Validate)                             //nothing much
-	admin.Post("/admin_panel/add_product", controller.AddProducts)             //formdata
-	admin.Put("/admin_panel/products/edit_products/:id", controller.UpdatePro) // formdata
+	admin.Get("/admin_panel", controller.Validate)
+	admin.Post("/admin_panel/add_product", controller.AddProducts)
+	admin.Put("/admin_panel/products/edit_products/:id", controller.UpdatePro)
 	admin.Delete("/admin_panel/products/delete_products/:id", controller.DelProduct)
 	admin.Get("/admin_panel/view_users", controller.ViewUsers)
 

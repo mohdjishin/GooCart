@@ -16,7 +16,6 @@ func RequireAdminAuth(c *fiber.Ctx) error {
 	db := Database.OpenDb()
 	defer Database.CloseDb(db)
 
-	// to get headers
 	tkn := c.GetReqHeaders()
 
 	tokenString := tkn["Authorization"]
@@ -27,16 +26,7 @@ func RequireAdminAuth(c *fiber.Ctx) error {
 	}
 	tokenString = tokenString[7:]
 
-	// get the cookie
-	// tokenString := c.Cookies("adminauth")
-	// if tokenString == "" {
-	// 	fmt.Println("failed")
-	// 	return c.SendStatus(http.StatusUnauthorized)
-
-	// }
 	fmt.Println(tokenString)
-
-	// decode/validate it
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 
@@ -49,7 +39,7 @@ func RequireAdminAuth(c *fiber.Ctx) error {
 	})
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		// check exp
+
 		if claims["role"] != "admin" {
 
 			return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
@@ -60,8 +50,6 @@ func RequireAdminAuth(c *fiber.Ctx) error {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			return c.SendStatus(http.StatusUnauthorized)
 		}
-
-		// find the user with token sub
 
 		user := new(model.Admin)
 
@@ -74,11 +62,7 @@ func RequireAdminAuth(c *fiber.Ctx) error {
 
 		}
 
-		// attach to req
 		c.Locals("id", user.ID)
-
-		// continue
-		// fmt.Println(c.Locals("id"))
 
 		c.Next()
 
@@ -116,7 +100,6 @@ func RequreUserAuth(c *fiber.Ctx) error {
 	})
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		// check exp
 
 		if claims["role"] != "user" {
 
@@ -129,8 +112,6 @@ func RequreUserAuth(c *fiber.Ctx) error {
 			return c.SendStatus(http.StatusUnauthorized)
 		}
 
-		// find the user with token sub
-
 		user := new(model.Users)
 
 		db.First(&user, claims["sub"])
@@ -142,11 +123,7 @@ func RequreUserAuth(c *fiber.Ctx) error {
 
 		}
 
-		// attach to req
 		c.Locals("id", user.ID)
-
-		// continue
-		// fmt.Println(c.Locals("id"))
 
 		c.Next()
 

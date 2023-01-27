@@ -109,12 +109,12 @@ func Combined(users []PersonalInformation, addresses []Extractaddress) []Combine
 		for _, a := range addresses {
 
 			if u.UserId == int(a.UserID) {
-				fmt.Println("he;p")
+
 				combined = append(combined, Combine{UserId: u.UserId, Username: u.Username, Name: u.Name, Mail: u.Mail, Phone: u.Phone, Verification: u.Verification, Housename: a.Housename, Street: a.Street, Pin: a.Pin, City: a.City, State: a.State})
 			}
 		}
 	}
-	fmt.Println(combined)
+
 	return combined
 }
 
@@ -211,7 +211,7 @@ func CombinePRoductAndProductImage(proInfo []ProductInfo, proimageInfo []Product
 			}
 		}
 	}
-	fmt.Println(combined)
+
 	return combined
 }
 

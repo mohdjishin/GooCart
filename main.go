@@ -12,11 +12,11 @@ import (
 func init() {
 
 	database.SyncDatabase()
+
 }
 
 func main() {
 
-	// utils.Payment("laptop", 40000)
 	app := fiber.New()
 
 	routes.AdminRoute(app)

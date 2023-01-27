@@ -17,7 +17,7 @@ func UserSignup(c *fiber.Ctx) error {
 
 	db := database.OpenDb()
 	defer database.CloseDb(db)
-	// get the username and password
+
 	user := new(model.Users)
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(500).SendString(err.Error())
@@ -46,8 +46,6 @@ func UserSignup(c *fiber.Ctx) error {
 	fmt.Println(hash)
 
 	user.Password = string(hash)
-
-	// create the user
 
 	res := db.Save(&user)
 
@@ -91,7 +89,7 @@ func UserLogin(c *fiber.Ctx) error {
 	defer database.CloseDb(db)
 
 	body := new(model.Users)
-	// take data from req
+
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(500).SendString(err.Error())
 	}
@@ -103,8 +101,6 @@ func UserLogin(c *fiber.Ctx) error {
 			"message": "invalid  usermame or password",
 		})
 	}
-
-	// check pass
 
 	err := bcrypt.CompareHashAndPassword([]byte(usr.Password), []byte(body.Password))
 	if err != nil {
@@ -127,7 +123,6 @@ func UserLogin(c *fiber.Ctx) error {
 
 	}
 	fmt.Println(usr.ID)
-	// refresh token
 
 	uuidv4, _ := uuid.NewRandom()
 
@@ -136,7 +131,7 @@ func UserLogin(c *fiber.Ctx) error {
 		fmt.Println(err)
 
 	}
-	// create tokem
+
 	tokenString, errMessage := utils.GenJwtToken("user", usr.ID, 86400)
 	if errMessage != "" {
 		return c.Status(http.StatusOK).JSON(fiber.Map{
@@ -162,8 +157,6 @@ func UserLogin(c *fiber.Ctx) error {
 		"refresh_token": uuidv4,
 	})
 
-	// c.Send([]byte("cookie send"))
-	// return c.Status(http.StatusOK).SendString("login success!")
 }
 
 func Home(c *fiber.Ctx) error {

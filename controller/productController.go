@@ -64,21 +64,6 @@ func AddProducts(c *fiber.Ctx) error {
 	fileTWo.Filename = uuid.New().String() + path.Ext(fileTWo.Filename)
 	fileThree.Filename = uuid.New().String() + path.Ext(fileThree.Filename)
 
-	// err = c.SaveFile(fileOne, "public/upload/"+fileOne.Filename)
-	// if err != nil {
-	// 	return c.Status(501).JSON(fiber.Map{"message": fileOne.Filename + " upload not completed successfull"})
-	// }
-
-	// err = c.SaveFile(fileTWo, "public/upload/"+fileTWo.Filename)
-	// if err != nil {
-	// 	return c.Status(501).JSON(fiber.Map{"message": fileTWo.Filename + " upload not completed successfull"})
-	// }
-
-	// err = c.SaveFile(fileThree, "public/upload/"+fileThree.Filename)
-	// if err != nil {
-	// 	return c.Status(501).JSON(fiber.Map{"message": fileThree.Filename + " upload not completed successfull"})
-	// }
-
 	url1, status1, _ := utils.UploadToBucket(fileOne)
 	if !status1 {
 
@@ -128,22 +113,6 @@ func UpdatePro(c *fiber.Ctx) error {
 		return c.SendStatus(http.StatusBadRequest)
 	}
 
-	// err := os.Remove("public/upload/" + pImages.ImageOne)
-	// if err != nil {
-	// 	fmt.Println("FIle not fount")
-	// }
-
-	// err = os.Remove("public/upload/" + pImages.ImgTwo)
-	// if err != nil {
-	// 	fmt.Println("FIle not fount")
-	// }
-
-	// err = os.Remove("public/upload/" + pImages.ImgThree)
-	// if err != nil {
-	// 	fmt.Println("FIle not fount")
-	// }
-	// update... just deleted files
-
 	pro := new(model.Products)
 	u64, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
@@ -183,20 +152,6 @@ func UpdatePro(c *fiber.Ctx) error {
 		})
 	}
 
-	// err = c.SaveFile(fileOne, "public/upload/"+fileOne.Filename)
-	// if err != nil {
-	// 	return c.Status(501).JSON(fiber.Map{"message": "file upload not completed successfull"})
-	// }
-
-	// err = c.SaveFile(fileTwo, "public/upload/"+fileTwo.Filename)
-	// if err != nil {
-	// 	return c.Status(501).JSON(fiber.Map{"message": "file upload not completed successfull"})
-	// }
-
-	// err = c.SaveFile(fileThree, "public/upload/"+fileThree.Filename)
-	// if err != nil {
-	// 	return c.Status(501).JSON(fiber.Map{"message": "file upload not completed successfull"})
-	// }
 	var wg sync.WaitGroup
 
 	var url1 string
@@ -207,12 +162,6 @@ func UpdatePro(c *fiber.Ctx) error {
 
 	var url3 string
 	var status3 bool
-
-	// url1, status1, _ = utils.UploadToBucket(fileOne)
-	// if !status1 {
-
-	// 	utils.InternalServerError("img one upload failed", c)
-	// }
 
 	wg.Add(1)
 	go func(url *string, status *bool, fileOne *multipart.FileHeader, w *sync.WaitGroup) {
@@ -233,11 +182,6 @@ func UpdatePro(c *fiber.Ctx) error {
 		w.Done()
 	}(&url2, &status2, fileTwo, &wg)
 
-	// url2, status2, _ := utils.UploadToBucket(fileTwo)
-	// if !status2 {
-
-	// 	utils.InternalServerError("img two upload failed", c)
-	// }
 	wg.Add(1)
 	go func(url *string, status *bool, fileThree *multipart.FileHeader, w *sync.WaitGroup) {
 		*url, *status, _ = utils.UploadToBucket(fileThree)
@@ -248,11 +192,7 @@ func UpdatePro(c *fiber.Ctx) error {
 		w.Done()
 	}(&url3, &status3, fileTwo, &wg)
 	wg.Wait()
-	// url3, status3, _ := utils.UploadToBucket(fileThree)
-	// if !status3 {
 
-	// 	utils.InternalServerError("img three upload failed", c)
-	// }
 	fileOne.Filename = url1
 	fileTwo.Filename = url2
 	fileThree.Filename = url3
@@ -260,7 +200,6 @@ func UpdatePro(c *fiber.Ctx) error {
 	pImages.ImageOne = fileOne.Filename
 	pImages.ImgTwo = fileTwo.Filename
 	pImages.ImgThree = fileThree.Filename
-	fmt.Println("---------------")
 
 	db.Save(&pImages)
 	db.Save(&pro)
@@ -284,19 +223,6 @@ func DelProduct(c *fiber.Ctx) error {
 			"message": "no match found",
 		})
 	}
-
-	// e := os.Remove("public/upload/" + proImg.ImageOne)
-	// if e != nil {
-	// 	fmt.Println("FIle not fount")
-	// }
-	// e = os.Remove("public/upload/" + proImg.ImgTwo)
-	// if e != nil {
-	// 	fmt.Println("FIle not fount")
-	// }
-	// e = os.Remove("public/upload/" + proImg.ImgThree)
-	// if e != nil {
-	// 	fmt.Println("FIle not fount")
-	// }
 
 	err := db.Delete(&proImg, "product_id = ?", id)
 	if err.Error != nil {

@@ -85,17 +85,7 @@ func Login(c *fiber.Ctx) error {
 		fmt.Println(err)
 
 	}
-	// create
 
-	// create tokem
-
-	// set to cookie
-
-	// c.Cookie(&fiber.Cookie{
-	// 	Name:     "adminauth",
-	// 	Value:    tokenString,
-	// 	HTTPOnly: true,
-	// })
 	tokenString, errMessage := utils.GenJwtToken("admin", usr.ID, 86400)
 	if errMessage != "" {
 		return c.Status(http.StatusOK).JSON(fiber.Map{
@@ -107,17 +97,12 @@ func Login(c *fiber.Ctx) error {
 		"refresh_token": uuidv4,
 	})
 
-	// c.Send([]byte("cookie send"))
-	// return c.Status(http.StatusOK).SendString("login success!")
 }
 
 func Validate(c *fiber.Ctx) error {
 
 	user := c.Locals("id")
 	fmt.Println(user)
-
-	// use := c.Locals("id")
-	// fmt.Println(use.(model.Admin).Name)
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "login success",
