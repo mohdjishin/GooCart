@@ -11,26 +11,7 @@ import (
 	"github.com/mohdjishin/GoCart/model"
 )
 
-// func init() {
-// 	currentTime := time.Now()
 
-// 	date := currentTime.Format("06-Jan-02")
-// 	// fmt.Println(currentTime)
-
-// 	m := pdf.NewMaroto(consts.Portrait, consts.A4)
-
-// 	m.SetPageMargins(20, 10, 20)
-// 	buildHeading(date, m)
-// 	BuildFruiteList(m)
-// 	BuildTotal("9000", m)
-
-// 	err := m.OutputFileAndClose("pdf/sample.pdf")
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	fmt.Println("PDF saved successfully")
-
-// }
 
 func GenerateInvoice(bill model.Invoice) {
 
