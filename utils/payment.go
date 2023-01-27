@@ -38,13 +38,6 @@ func Payment(products string, totalAmount float64) string {
 	if err != nil {
 		log.Printf("session.New: %v", err)
 	}
-	// fmt.Println(fiber.Map{"message": "success",
-	// 	"products": "orders",
-	// 	"total":    total,
-	// 	"url":      s.URL,
-	// })
-
-	// fmt.Println(s.PaymentIntent)
 
 	return s.URL
 }
