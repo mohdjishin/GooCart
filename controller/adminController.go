@@ -273,7 +273,7 @@ func AdminRefresh(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
-	err, accessToken, rfToken := utils.RefreshToken(db, rt.Refresh_token, rt.Access_token)
+	err, accessToken, rfToken := utils.AdminRefreshToken(db, rt.Refresh_token, rt.Access_token)
 
 	if err != "" {
 		return c.Status(400).JSON(fiber.Map{"message": err})
