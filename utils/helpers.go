@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"path"
 
 	"mime/multipart"
@@ -158,6 +159,39 @@ func UploadToBucket(file *multipart.FileHeader) (string, bool, string) {
 
 	return result.Location, true, file.Filename
 
+}
+
+func UploadPDFToS3(filePath string, filname string) (bool, string) {
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Printf("error: %v", err)
+		return false, ""
+	}
+
+	client := s3.NewFromConfig(cfg)
+	file, err := os.Open(filePath)
+
+	if err != nil {
+		fmt.Println("error opening file")
+		return false, ""
+
+	}
+	defer file.Close()
+
+	uploader := manager.NewUploader(client)
+	result, UploadErr := uploader.Upload(context.TODO(), &s3.PutObjectInput{
+		Bucket: aws.String("code-with-jishin"),
+		Key:    aws.String(filname),
+		Body:   file,
+		ACL:    "public-read",
+	})
+	if UploadErr != nil {
+		return false, ""
+
+	}
+	fmt.Println(result.Location)
+
+	return true, result.Location
 }
 
 func ExtractProductInfo(product []model.Products) []ProductInfo {

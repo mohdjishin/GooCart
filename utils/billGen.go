@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/johnfercher/maroto/pkg/color"
 	"github.com/johnfercher/maroto/pkg/consts"
 	"github.com/johnfercher/maroto/pkg/pdf"
@@ -32,8 +33,9 @@ import (
 
 // }
 
-func GenerateInvoice(bill model.Invoice) {
+func GenerateInvoice(bill model.Invoice) string {
 
+	name := uuid.New().String()
 	fmt.Println(bill)
 	m := pdf.NewMaroto(consts.Portrait, consts.A4)
 	currentTime := time.Now()
@@ -46,12 +48,12 @@ func GenerateInvoice(bill model.Invoice) {
 
 	BuildTotal(bill.Total, m)
 
-	err := m.OutputFileAndClose("media/pdf/sample.pdf")
+	err := m.OutputFileAndClose("media/pdf/" + name + ".pdf")
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println("PDF saved successfully")
-
+	return name + ".pdf"
 }
 
 func BuildTotal(total string, m pdf.Maroto) {

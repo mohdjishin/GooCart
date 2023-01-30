@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -529,12 +530,22 @@ func GenerateInvoice(c *fiber.Ctx) error {
 	bill.Quantity = fmt.Sprintf("%v", order.Quantity)
 	bill.Total = fmt.Sprintf("%v", total)
 
-	utils.GenerateInvoice(*bill)
+	filen := utils.GenerateInvoice(*bill)
 
+	st, url := utils.UploadPDFToS3("/home/mohdjishin/brototype/GoCart/media/pdf/"+filen, filen)
+	if st {
+		fmt.Println("uploaded")
+		err := os.Remove("/home/mohdjishin/brototype/GoCart/media/pdf/" + filen)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 	// combineOrderAndProd := utils.CombinedPRoductOrder(order, prod)
 
 	return c.Status(200).JSON(fiber.Map{
 		"message": "success",
+		"invoice": url,
 	})
 }
 
