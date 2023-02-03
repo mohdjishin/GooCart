@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+
+  web:
+    build: .
+    container_name: web
+    restart: on-failure
+    ports:
+      - 8001:3000
+
+    environment:
+      - PORT=${PORT}
+      - OOOO=database
+
+      - DNS=host=database user=postgres password=password dbname=gocart port=5432 sslmode=disable
+
+
+      - SECRET=${SECRET}
+
+
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN =${TWILIO_AUTH_TOKEN}
+      - VERIFY_SERVICE_SID=${VERIFY_SERVICE_SID}
+
+
+
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
+
+      - PAYMENT_SEC_KEY=${PAYMENT_SEC_KEY}
+  database:
+    image: postgres:latest
+    # container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: gocart
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data

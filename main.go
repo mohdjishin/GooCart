@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/mohdjishin/GoCart/database"
@@ -10,7 +11,7 @@ import (
 )
 
 func init() {
-
+	time.Sleep(time.Second * 8)
 	database.SyncDatabase()
 
 }
