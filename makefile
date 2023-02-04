@@ -17,6 +17,7 @@ docker-compose-up:
 docker-compose-down:
 	sudo docker compose down
 
+# make docker to start docker-compose-up
 
 docker: Docker-build docker-compose-up
 
