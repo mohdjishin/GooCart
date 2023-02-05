@@ -8,6 +8,7 @@ import (
 
 func UserRoute(app *fiber.App) {
 
+	app.Get("/", controller.First)
 	app.Post("/user/registration", controller.UserSignup) //json
 	app.Post("/user/login", controller.UserLogin)         //json
 	app.Post("/user/refresh", controller.Refresh)

@@ -617,3 +617,7 @@ func RemoveFromCart(c *fiber.Ctx) error {
 		"message": "no item found",
 	})
 }
+
+func First(c *fiber.Ctx) error {
+	return c.Status(200).SendString(" please visit https://github.com/mohdjishin/GooCart")
+}
