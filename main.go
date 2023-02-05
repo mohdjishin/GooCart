@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	time.Sleep(time.Second * 8)
+	time.Sleep(time.Second * 7)
 	database.SyncDatabase()
 
 }
