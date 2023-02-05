@@ -45,7 +45,7 @@ run
 go run *.go
 ```
 
-app is listening on port 3000
+app is listening on port 8080
 
 
 
