@@ -1,4 +1,4 @@
-#makefile for GoCart
+
 build:
 	go build -o bin/GoCart *.go
 
