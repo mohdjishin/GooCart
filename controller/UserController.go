@@ -619,5 +619,5 @@ func RemoveFromCart(c *fiber.Ctx) error {
 }
 
 func First(c *fiber.Ctx) error {
-	return c.Status(200).SendString(" please visit https://github.com/mohdjishin/GooCart")
+	return c.Status(200).SendString(" please visit - https://github.com/mohdjishin/GooCart")
 }
