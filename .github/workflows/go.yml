@@ -22,6 +22,8 @@ jobs:
 
     - name: Build
       run: go build -v ./...
+    - name:  GCC
+      run: sudo apt install gcc
       
 
     - name: Test
