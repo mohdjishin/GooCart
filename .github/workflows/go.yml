@@ -23,7 +23,7 @@ jobs:
     - name: Build
       run: go build -v ./...
     - name:  GCC
-      run: sudo apt install gcc
+      run: sudo apt install build-essential -y
       
 
     - name: Test
