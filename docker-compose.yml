@@ -7,7 +7,7 @@ services:
     container_name: web
     restart: on-failure
     ports:
-      - 8001:3000
+      - 8080:3000
 
     environment:
       - PORT=${PORT}
