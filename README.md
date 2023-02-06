@@ -67,7 +67,31 @@ run makefile
 ```
 make all
 ```
+## Adding .env file
+- Create a new file in the root of your project directory and name it .env.
+- Add the following information to the file:
+```
+#port
+PORT=8080
+#database
+DNS= "host=<host> user=<username> password=<password> dbname=<databsename> port=5432 sslmode=disable"
 
+#JWT encryption key
+SECRET= <SecretKey>
+
+#Twilio
+TWILIO_ACCOUNT_SID=<TWILIO_ACCOUNT_SID>
+TWILIO_AUTH_TOKEN = <TWILIO_AUTH_TOKEN >
+VERIFY_SERVICE_SID= <VERIFY_SERVICE_SID >
+
+#AWS
+AWS_REGION=<AWS_REGION>
+AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
+AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+
+#Stripe
+PAYMENT_SEC_KEY=<Stripe PAYMENT_SEC_KEY>
+```
 
 
 ## Contributing
