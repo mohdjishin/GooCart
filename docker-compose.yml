@@ -13,13 +13,12 @@ services:
       - PORT=${PORT}
       - OOOO=database
 
-      - DNS=host=database user=postgres password=password dbname=gocart port=5432 sslmode=disable
+      - DNS=host=database user=postgres password=password port=5432 dbname=gocart  sslmode=disable
 
 
       - SECRET=${SECRET}
 
 
-      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN =${TWILIO_AUTH_TOKEN}
       - VERIFY_SERVICE_SID=${VERIFY_SERVICE_SID}
 

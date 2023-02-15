@@ -31,6 +31,7 @@ func CloseDb(db *gorm.DB) {
 func OpenDb() *gorm.DB {
 	db, err := gorm.Open(postgres.Open(os.Getenv("DNS")), &gorm.Config{})
 	if err != nil {
+
 		log.Fatal("error in connecting database : ", err)
 	}
 	return db
