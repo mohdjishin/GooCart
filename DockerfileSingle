@@ -1,0 +1,29 @@
+FROM golang:latest
+
+# Install PostgreSQL
+RUN apt-get update && \
+    apt-get -y install postgresql postgresql-contrib && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set environment variables
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=password
+ENV POSTGRES_DB=gocart
+
+# Copy application files
+COPY . /app
+WORKDIR /app
+
+# Install dependencies
+RUN go get -d -v ./...
+RUN go install -v ./...
+
+# Expose port for the REST API
+EXPOSE 3000
+
+# Start the PostgreSQL service and run the REST API
+CMD service postgresql start && \
+    service postgresql status && \
+    su postgres -c "psql -c \"ALTER USER $POSTGRES_USER WITH PASSWORD '$POSTGRES_PASSWORD';\"" && \
+    su postgres -c "createdb $POSTGRES_DB" && \
+    go run main.go
