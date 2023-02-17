@@ -67,6 +67,14 @@ run makefile
 ```
 make all
 ```
+
+
+## Run using Docker
+
+```
+docker run -p 8080:3000 mohdjishin/goocart:latest
+```
+
 ## Adding .env file
 - Create a new file in the root of your project directory and name it .env.
 - Add the following information to the file:
