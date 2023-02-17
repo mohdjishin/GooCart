@@ -7,6 +7,7 @@ GooCart is a high-performance e-commerce platform backend written in Go language
 
 
 ## Technologies and tools used
+<pre>
 
 - Language : Go                                                             <img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" /> 
 
@@ -24,7 +25,7 @@ GooCart is a high-performance e-commerce platform backend written in Go language
 
 - Docker
 
-
+</pre>
 
 ## Run On local machine
 
