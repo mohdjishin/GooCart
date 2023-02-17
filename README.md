@@ -96,4 +96,4 @@ PAYMENT_SEC_KEY=<Stripe PAYMENT_SEC_KEY>
 
 ## Contributing
 We welcome contributions to this project. Please fork the repository and submit a pull request with your changes.
-<img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" />
+<img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" />  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white"/>
