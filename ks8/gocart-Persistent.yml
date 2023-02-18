@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gocart
+  labels:
+    app: gocart
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gocart
+  template:
+    metadata:
+      labels:
+        app: gocart
+    spec:
+      containers:
+      - name: gocart
+        image: mohdjishin/goocart
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: my-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gocart-service
+spec:
+  selector:
+    app: gocart
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+    nodePort: 30000
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: my-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
