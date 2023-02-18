@@ -22,6 +22,15 @@ spec:
         volumeMounts:
         - name: data # name of the volume
           mountPath: ./data # mount path inside the container
+ 
+        resources:   # set resource limits
+          requests: # set resource requests minimum
+            cpu: 100m
+            memory: 128Mi
+        
+          limits:   # set resource limits maximum
+            cpu: 500m
+            memory: 512Mi
       volumes:
       - name: data
         persistentVolumeClaim:
