@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gocart
+  labels:
+    app: gocart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gocart
+  template:
+    metadata:
+      labels:
+        app: gocart
+    spec:
+      containers:
+      - name: gocart
+        image: mohdjishin/goocart
+        ports:
+        - containerPort: 3000
