@@ -18,14 +18,14 @@ spec:
       - name: gocart
         image: mohdjishin/goocart
         ports:
-        - containerPort: 3000
+        - containerPort: 3000 # container port
         volumeMounts:
-        - name: data
-          mountPath: /data
+        - name: data # name of the volume
+          mountPath: ./data # mount path inside the container
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: my-pvc
+          claimName: my-pvc # reference the PVC created above
 ---
 apiVersion: v1
 kind: Service
@@ -37,17 +37,17 @@ spec:
   type: LoadBalancer
   ports:
   - protocol: TCP
-    port: 3000
-    targetPort: 3000
-    nodePort: 30000
+    port: 8080 # service port
+    targetPort: 3000 # container port
+    nodePort: 30000 # node port
 ---
-kind: PersistentVolumeClaim
+kind: PersistentVolumeClaim # create a persistent volume claim
 apiVersion: v1
 metadata:
   name: my-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteOnce # set your access mode here
   resources:
     requests:
-      storage: 1Gi
+      storage: 1Gi # set your storage size here
