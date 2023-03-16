@@ -11,14 +11,13 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
 )
 
 func AddProducts(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	product := new(model.Products)
 
@@ -101,8 +100,8 @@ func AddProducts(c *fiber.Ctx) error {
 }
 
 func UpdatePro(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	id := c.Params("id")
 	fmt.Println(id)
@@ -209,8 +208,8 @@ func UpdatePro(c *fiber.Ctx) error {
 }
 
 func DelProduct(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	id := c.Params("id")
 	fmt.Println(id)
 
@@ -244,8 +243,8 @@ func DelProduct(c *fiber.Ctx) error {
 	})
 }
 func ViewProducts(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	var products []model.Products
 
@@ -273,8 +272,8 @@ func ViewProducts(c *fiber.Ctx) error {
 }
 
 func GetbyCategory(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	type category struct {
 		Category string `json:"pro_category"`
 	}
@@ -298,9 +297,9 @@ func GetbyCategory(c *fiber.Ctx) error {
 }
 
 func SearchProduct(c *fiber.Ctx) error {
-	db := database.OpenDb()
+	db := DB.OpenDb()
 
-	defer database.CloseDb(db)
+	defer DB.CloseDb(db)
 	id := c.Params("key")
 	fmt.Println(id)
 
