@@ -8,7 +8,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
 	"golang.org/x/crypto/bcrypt"
@@ -86,8 +85,8 @@ func UserSignup(c *fiber.Ctx) error {
 }
 
 func UserLogin(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	body := new(model.Users)
 
