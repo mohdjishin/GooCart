@@ -13,10 +13,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Signup(c *fiber.Ctx) error {
-	db := database.OpenDb()
+// type AdminFunctions struct{}
 
-	database.CloseDb(db)
+var DB = database.NewDatabaseConnection()
+
+func Signup(c *fiber.Ctx) error {
+	db := DB.OpenDb()
+
+	defer DB.CloseDb(db)
 	// get the username and password
 	user := new(model.Admin)
 
@@ -49,8 +53,8 @@ func Signup(c *fiber.Ctx) error {
 }
 
 func Login(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	body := new(model.Admin)
 	// take data from req
@@ -110,8 +114,8 @@ func Validate(c *fiber.Ctx) error {
 
 }
 func UserManagement(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	user := new(model.Users)
 
@@ -131,8 +135,8 @@ func UserManagement(c *fiber.Ctx) error {
 }
 func ViewUsers(c *fiber.Ctx) error {
 
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	var user []model.Users
 	err := db.Where("id > ?", 0).Find(&user).Error
 	if err != nil {
@@ -176,8 +180,8 @@ func Logout(c *fiber.Ctx) error {
 
 func ViewOrders(c *fiber.Ctx) error {
 
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	var orders []model.Order
 
@@ -190,8 +194,8 @@ func ViewOrders(c *fiber.Ctx) error {
 }
 
 func DeliveryStatusUpdate(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	type delStatus struct {
 		Id              int    `json:"id"`
 		ProID           int    `json:"pro_id"`
@@ -239,8 +243,8 @@ func DeliveryStatusUpdate(c *fiber.Ctx) error {
 
 }
 func ManageUser(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	user := new(model.Users)
 
 	type manageUser struct {
@@ -261,8 +265,8 @@ func ManageUser(c *fiber.Ctx) error {
 }
 
 func AdminRefresh(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	type refreshToken struct {
 		Access_token  string `json:"access_token"`
 		Refresh_token string `json:"refresh_token"`

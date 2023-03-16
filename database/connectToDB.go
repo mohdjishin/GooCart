@@ -9,6 +9,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type Database struct{}
+
+func NewDatabaseConnection() IDatabase {
+	return Database{}
+}
+
 // var DB *gorm.DB
 
 // func ConnectToDb() {
@@ -23,12 +29,12 @@ import (
 
 // }
 
-func CloseDb(db *gorm.DB) {
+func (Database) CloseDb(db *gorm.DB) {
 	dbInstance, _ := db.DB()
 	_ = dbInstance.Close()
 }
 
-func OpenDb() *gorm.DB {
+func (Database) OpenDb() *gorm.DB {
 	db, err := gorm.Open(postgres.Open(os.Getenv("DNS")), &gorm.Config{})
 	if err != nil {
 

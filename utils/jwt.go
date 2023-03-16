@@ -21,6 +21,7 @@ func GenJwtToken(role string, userId uint, duration int) (string, string) {
 	})
 
 	fmt.Println(token.Valid)
+	fmt.Println(token.Valid)
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 	fmt.Println(tokenString)
 	if err != nil {
