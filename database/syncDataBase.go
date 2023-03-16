@@ -2,9 +2,11 @@ package database
 
 import "github.com/mohdjishin/GoCart/model"
 
+var DB = NewDatabaseConnection()
+
 func SyncDatabase() {
-	db := OpenDb()
-	defer CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	db.AutoMigrate(&model.Admin{})
 
 	db.AutoMigrate(&model.Products{})

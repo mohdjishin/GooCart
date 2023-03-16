@@ -12,9 +12,11 @@ import (
 	"github.com/mohdjishin/GoCart/model"
 )
 
+var DB = Database.NewDatabaseConnection()
+
 func RequireAdminAuth(c *fiber.Ctx) error {
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	tkn := c.GetReqHeaders()
 
