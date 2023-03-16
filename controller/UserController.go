@@ -16,8 +16,8 @@ import (
 
 func UserSignup(c *fiber.Ctx) error {
 
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	user := new(model.Users)
 	if err := c.BodyParser(user); err != nil {
@@ -171,9 +171,9 @@ func Home(c *fiber.Ctx) error {
 
 func Verification(c *fiber.Ctx) error {
 
-	db := database.OpenDb()
+	db := DB.OpenDb()
 
-	defer database.CloseDb(db)
+	defer DB.CloseDb(db)
 	status := false
 
 	userId := c.Locals("id")
@@ -213,8 +213,8 @@ func Verification(c *fiber.Ctx) error {
 }
 
 func EditUserInfo(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	userId := c.Locals("id")
 
 	// get user info from req
@@ -286,8 +286,8 @@ func EditUserInfo(c *fiber.Ctx) error {
 }
 
 func AddToCart(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	user_Id := c.Locals("id")
 	usr_id := fmt.Sprintf("%v", user_Id)
 
@@ -362,8 +362,8 @@ func AddToCart(c *fiber.Ctx) error {
 }
 
 func OrderFromCart(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	user_Id := c.Locals("id")
 	usr_id := fmt.Sprintf("%v", user_Id)
 
@@ -405,8 +405,8 @@ func OrderFromCart(c *fiber.Ctx) error {
 }
 
 func Checkout(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	uid := c.Locals("id")
 	user_id := fmt.Sprintf("%v", uid)
 	cartTotal := new(model.CartTotal)
@@ -475,8 +475,8 @@ func UserLogout(c *fiber.Ctx) error {
 }
 
 func Refresh(c *fiber.Ctx) error {
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	type refreshToken struct {
 		Access_token  string `json:"access_token"`
 		Refresh_token string `json:"refresh_token"`
@@ -500,8 +500,8 @@ func Refresh(c *fiber.Ctx) error {
 
 func GenerateInvoice(c *fiber.Ctx) error {
 
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	orderId := c.Params("order_id")
 
 	bill := new(model.Invoice)
@@ -551,8 +551,8 @@ func GenerateInvoice(c *fiber.Ctx) error {
 
 func RemoveFromCart(c *fiber.Ctx) error {
 
-	db := database.OpenDb()
-	defer database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	user_Id := c.Locals("id")
 	usr_id := fmt.Sprintf("%v", user_Id)
 
