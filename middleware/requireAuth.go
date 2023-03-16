@@ -76,8 +76,8 @@ func RequireAdminAuth(c *fiber.Ctx) error {
 	return nil
 }
 func RequreUserAuth(c *fiber.Ctx) error {
-	db := Database.OpenDb()
-	defer Database.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	fmt.Println("In middleware")
 
