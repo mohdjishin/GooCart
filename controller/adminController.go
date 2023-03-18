@@ -13,11 +13,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// type AdminFunctions struct{}
+type Admin struct{}
 
 var DB = database.NewDatabaseConnection()
 
-func Signup(c *fiber.Ctx) error {
+func NewAdmin() IAdmin {
+	return &Admin{}
+}
+
+func (*Admin) Signup(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 
 	defer DB.CloseDb(db)
@@ -52,7 +56,7 @@ func Signup(c *fiber.Ctx) error {
 	return c.Status(200).SendString("account created")
 }
 
-func Login(c *fiber.Ctx) error {
+func (*Admin) Login(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 
@@ -103,7 +107,7 @@ func Login(c *fiber.Ctx) error {
 
 }
 
-func Validate(c *fiber.Ctx) error {
+func (*Admin) Validate(c *fiber.Ctx) error {
 
 	user := c.Locals("id")
 	fmt.Println(user)
@@ -113,7 +117,7 @@ func Validate(c *fiber.Ctx) error {
 	})
 
 }
-func UserManagement(c *fiber.Ctx) error {
+func (*Admin) UserManagement(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 
@@ -133,7 +137,7 @@ func UserManagement(c *fiber.Ctx) error {
 	})
 
 }
-func ViewUsers(c *fiber.Ctx) error {
+func (*Admin) ViewUsers(c *fiber.Ctx) error {
 
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
@@ -157,7 +161,7 @@ func ViewUsers(c *fiber.Ctx) error {
 
 }
 
-func Logout(c *fiber.Ctx) error {
+func (*Admin) Logout(c *fiber.Ctx) error {
 	userId := c.Locals("id")
 	usr_id := fmt.Sprintf("%v", userId)
 
@@ -178,7 +182,7 @@ func Logout(c *fiber.Ctx) error {
 
 }
 
-func ViewOrders(c *fiber.Ctx) error {
+func (*Admin) ViewOrders(c *fiber.Ctx) error {
 
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
@@ -193,7 +197,7 @@ func ViewOrders(c *fiber.Ctx) error {
 
 }
 
-func DeliveryStatusUpdate(c *fiber.Ctx) error {
+func (*Admin) DeliveryStatusUpdate(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	type delStatus struct {
@@ -242,7 +246,7 @@ func DeliveryStatusUpdate(c *fiber.Ctx) error {
 	})
 
 }
-func ManageUser(c *fiber.Ctx) error {
+func (*Admin) ManageUser(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	user := new(model.Users)
@@ -264,7 +268,7 @@ func ManageUser(c *fiber.Ctx) error {
 
 }
 
-func AdminRefresh(c *fiber.Ctx) error {
+func (*Admin) AdminRefresh(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	type refreshToken struct {
