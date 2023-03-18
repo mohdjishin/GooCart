@@ -16,7 +16,13 @@ import (
 var BillGen = utils.NewBillGenerator()
 var Token = utils.NewToken()
 
-func UserSignup(c *fiber.Ctx) error {
+type User struct{}
+
+func NewUserFunc() IUser {
+	return &User{}
+}
+
+func (*User) UserSignup(c *fiber.Ctx) error {
 
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
@@ -87,7 +93,7 @@ func UserSignup(c *fiber.Ctx) error {
 	return c.Status(200).SendString("account created")
 }
 
-func UserLogin(c *fiber.Ctx) error {
+func (*User) UserLogin(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 
@@ -162,7 +168,7 @@ func UserLogin(c *fiber.Ctx) error {
 
 }
 
-func Home(c *fiber.Ctx) error {
+func (*User) Home(c *fiber.Ctx) error {
 
 	user := c.Locals("id")
 	fmt.Println(user)
@@ -171,7 +177,7 @@ func Home(c *fiber.Ctx) error {
 	return nil
 }
 
-func Verification(c *fiber.Ctx) error {
+func (*User) Verification(c *fiber.Ctx) error {
 
 	db := DB.OpenDb()
 
@@ -214,7 +220,7 @@ func Verification(c *fiber.Ctx) error {
 
 }
 
-func EditUserInfo(c *fiber.Ctx) error {
+func (*User) EditUserInfo(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	userId := c.Locals("id")
@@ -287,7 +293,7 @@ func EditUserInfo(c *fiber.Ctx) error {
 	return c.Status(200).JSON(res)
 }
 
-func AddToCart(c *fiber.Ctx) error {
+func (*User) AddToCart(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	user_Id := c.Locals("id")
@@ -363,7 +369,7 @@ func AddToCart(c *fiber.Ctx) error {
 	return c.Status(200).JSON(cart)
 }
 
-func OrderFromCart(c *fiber.Ctx) error {
+func (*User) OrderFromCart(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	user_Id := c.Locals("id")
@@ -406,7 +412,7 @@ func OrderFromCart(c *fiber.Ctx) error {
 	})
 }
 
-func Checkout(c *fiber.Ctx) error {
+func (*User) Checkout(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	uid := c.Locals("id")
@@ -454,7 +460,7 @@ func Checkout(c *fiber.Ctx) error {
 	})
 }
 
-func UserLogout(c *fiber.Ctx) error {
+func (*User) UserLogout(c *fiber.Ctx) error {
 
 	userId := c.Locals("id")
 	usr_id := fmt.Sprintf("%v", userId)
@@ -476,7 +482,7 @@ func UserLogout(c *fiber.Ctx) error {
 
 }
 
-func Refresh(c *fiber.Ctx) error {
+func (*User) Refresh(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	type refreshToken struct {
@@ -500,7 +506,7 @@ func Refresh(c *fiber.Ctx) error {
 	})
 }
 
-func GenerateInvoice(c *fiber.Ctx) error {
+func (*User) GenerateInvoice(c *fiber.Ctx) error {
 
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
@@ -551,7 +557,7 @@ func GenerateInvoice(c *fiber.Ctx) error {
 	})
 }
 
-func RemoveFromCart(c *fiber.Ctx) error {
+func (*User) RemoveFromCart(c *fiber.Ctx) error {
 
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
@@ -620,6 +626,6 @@ func RemoveFromCart(c *fiber.Ctx) error {
 	})
 }
 
-func First(c *fiber.Ctx) error {
+func (*User) First(c *fiber.Ctx) error {
 	return c.Status(200).SendString(" please visit - https://github.com/mohdjishin/GooCart")
 }

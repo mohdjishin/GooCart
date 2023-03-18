@@ -10,11 +10,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var u = NewUserFunc()
+
 func TestHome(t *testing.T) {
 
 	server := fiber.New()
 	// routes
-	server.Get("/home", Home)
+	server.Get("/home", u.Home)
 
 	req, _ := http.NewRequest(http.MethodGet, "/home", nil)
 	resp, _ := server.Test(req, -1)
