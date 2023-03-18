@@ -13,6 +13,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var BillGen = utils.NewBillGenerator()
+
 func UserSignup(c *fiber.Ctx) error {
 
 	db := DB.OpenDb()
@@ -529,7 +531,7 @@ func GenerateInvoice(c *fiber.Ctx) error {
 	bill.Quantity = fmt.Sprintf("%v", order.Quantity)
 	bill.Total = fmt.Sprintf("%v", total)
 
-	filen := utils.GenerateInvoice(*bill)
+	filen := BillGen.GenerateInvoice(*bill)
 
 	st, url := utils.UploadPDFToS3("/home/mohdjishin/brototype/GoCart/media/pdf/"+filen, filen)
 	if st {

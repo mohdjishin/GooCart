@@ -33,7 +33,13 @@ import (
 
 // }
 
-func GenerateInvoice(bill model.Invoice) string {
+type BillGenerator struct{}
+
+func NewBillGenerator() IBillGenerator {
+	return &BillGenerator{}
+}
+
+func (*BillGenerator) GenerateInvoice(bill model.Invoice) string {
 
 	name := uuid.New().String()
 	fmt.Println(bill)
