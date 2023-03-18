@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	I "github.com/mohdjishin/GoCart/interfaces"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
 	"golang.org/x/crypto/bcrypt"
@@ -18,7 +19,7 @@ var Token = utils.NewToken()
 
 type User struct{}
 
-func NewUserFunc() IUser {
+func NewUserFunc() I.IUser {
 	return &User{}
 }
 

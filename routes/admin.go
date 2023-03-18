@@ -11,7 +11,7 @@ var a = controller.NewAdmin()
 
 func AdminRoute(app *fiber.App) {
 
-	// app.Post("/admin/signup", controller.Signup)
+	// app.Post("/admin/signup", a.Signup)
 
 	app.Post("/admins_login", a.Login) //json
 	admin := app.Group("/admin", middleware.RequireAdminAuth)

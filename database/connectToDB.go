@@ -5,13 +5,14 @@ import (
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
+	I "github.com/mohdjishin/GoCart/interfaces"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type Database struct{}
 
-func NewDatabaseConnection() IDatabase {
+func NewDatabaseConnection() I.IDatabase {
 	return Database{}
 }
 

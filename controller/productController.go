@@ -11,13 +11,14 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	I "github.com/mohdjishin/GoCart/interfaces"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
 )
 
 type Products struct{}
 
-func NewProduct() IProduct {
+func NewProduct() I.IProduct {
 	return &Products{}
 }
 

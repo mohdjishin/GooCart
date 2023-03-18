@@ -7,13 +7,14 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
+	I "github.com/mohdjishin/GoCart/interfaces"
 	"github.com/mohdjishin/GoCart/model"
 	"gorm.io/gorm"
 )
 
 type token struct{}
 
-func NewToken() IToken {
+func NewToken() I.IToken {
 	return &token{}
 }
 

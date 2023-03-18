@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/mohdjishin/GoCart/database"
+	I "github.com/mohdjishin/GoCart/interfaces"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
 	"golang.org/x/crypto/bcrypt"
@@ -17,7 +18,7 @@ type Admin struct{}
 
 var DB = database.NewDatabaseConnection()
 
-func NewAdmin() IAdmin {
+func NewAdmin() I.IAdmin {
 	return &Admin{}
 }
 

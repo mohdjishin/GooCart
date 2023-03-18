@@ -9,6 +9,7 @@ import (
 	"github.com/johnfercher/maroto/pkg/consts"
 	"github.com/johnfercher/maroto/pkg/pdf"
 	"github.com/johnfercher/maroto/pkg/props"
+	I "github.com/mohdjishin/GoCart/interfaces"
 	"github.com/mohdjishin/GoCart/model"
 )
 
@@ -35,7 +36,7 @@ import (
 
 type BillGenerator struct{}
 
-func NewBillGenerator() IBillGenerator {
+func NewBillGenerator() I.IBillGenerator {
 	return &BillGenerator{}
 }
 
