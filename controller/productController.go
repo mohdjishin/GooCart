@@ -17,7 +17,7 @@ import (
 
 type Products struct{}
 
-func NewProduct() *IProduct {
+func NewProduct() IProduct {
 	return &Products{}
 }
 
