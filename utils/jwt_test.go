@@ -6,6 +6,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var tkn = NewToken()
+
 func TestRefreshToken(t *testing.T) {
 	type args struct {
 		db          *gorm.DB
@@ -25,7 +27,7 @@ func TestRefreshToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, got2 := RefreshToken(tt.args.db, tt.args.refresh, tt.args.accessToken)
+			got, got1, got2 := tkn.RefreshToken(tt.args.db, tt.args.refresh, tt.args.accessToken)
 			if got != tt.want {
 
 				t.Errorf("RefreshToken() got = %v,  want %v", got, tt.want)

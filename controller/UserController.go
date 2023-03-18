@@ -14,6 +14,7 @@ import (
 )
 
 var BillGen = utils.NewBillGenerator()
+var Token = utils.NewToken()
 
 func UserSignup(c *fiber.Ctx) error {
 
@@ -134,7 +135,7 @@ func UserLogin(c *fiber.Ctx) error {
 
 	}
 
-	tokenString, errMessage := utils.GenJwtToken("user", usr.ID, 86400)
+	tokenString, errMessage := Token.GenJwtToken("user", usr.ID, 86400)
 	if errMessage != "" {
 		return c.Status(http.StatusOK).JSON(fiber.Map{
 			"message": errMessage,
@@ -463,7 +464,7 @@ func UserLogout(c *fiber.Ctx) error {
 		fmt.Println(err)
 	}
 
-	tokenString, errMessage := utils.GenJwtToken("user", uint(u64), 1)
+	tokenString, errMessage := Token.GenJwtToken("user", uint(u64), 1)
 	if errMessage != "" {
 		return c.Status(http.StatusOK).JSON(fiber.Map{
 			"message": errMessage,
@@ -488,7 +489,7 @@ func Refresh(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
-	err, accessToken, rfToken := utils.RefreshToken(db, rt.Refresh_token, rt.Access_token)
+	err, accessToken, rfToken := Token.RefreshToken(db, rt.Refresh_token, rt.Access_token)
 
 	if err != "" {
 		return c.Status(400).JSON(fiber.Map{"message": err})

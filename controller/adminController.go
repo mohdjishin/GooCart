@@ -90,7 +90,7 @@ func Login(c *fiber.Ctx) error {
 
 	}
 
-	tokenString, errMessage := utils.GenJwtToken("admin", usr.ID, 86400)
+	tokenString, errMessage := Token.GenJwtToken("admin", usr.ID, 86400)
 	if errMessage != "" {
 		return c.Status(http.StatusOK).JSON(fiber.Map{
 			"message": errMessage,
@@ -166,7 +166,7 @@ func Logout(c *fiber.Ctx) error {
 		fmt.Println(err)
 	}
 
-	tokenString, errMessage := utils.GenJwtToken("admin", uint(u64), 1)
+	tokenString, errMessage := Token.GenJwtToken("admin", uint(u64), 1)
 	if errMessage != "" {
 		return c.Status(http.StatusOK).JSON(fiber.Map{
 			"message": errMessage,
@@ -277,7 +277,7 @@ func AdminRefresh(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
-	err, accessToken, rfToken := utils.AdminRefreshToken(db, rt.Refresh_token, rt.Access_token)
+	err, accessToken, rfToken := Token.AdminRefreshToken(db, rt.Refresh_token, rt.Access_token)
 
 	if err != "" {
 		return c.Status(400).JSON(fiber.Map{"message": err})

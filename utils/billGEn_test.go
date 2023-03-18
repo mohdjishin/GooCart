@@ -6,6 +6,8 @@ import (
 	"github.com/mohdjishin/GoCart/model"
 )
 
+var bill = NewBillGenerator()
+
 func TestGenerateInvoice(t *testing.T) {
 	type args struct {
 		bill model.Invoice
@@ -25,7 +27,7 @@ func TestGenerateInvoice(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			GenerateInvoice(tt.args.bill)
+			bill.GenerateInvoice(tt.args.bill)
 		})
 	}
 

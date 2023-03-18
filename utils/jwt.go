@@ -11,7 +11,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func GenJwtToken(role string, userId uint, duration int) (string, string) {
+type token struct{}
+
+func NewToken() IToken {
+	return &token{}
+}
+
+func (*token) GenJwtToken(role string, userId uint, duration int) (string, string) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 
@@ -32,7 +38,7 @@ func GenJwtToken(role string, userId uint, duration int) (string, string) {
 
 }
 
-func RefreshToken(db *gorm.DB, refresh string, accessToken string) (string, string, string) {
+func (t *token) RefreshToken(db *gorm.DB, refresh string, accessToken string) (string, string, string) {
 
 	tokenString := accessToken
 	if tokenString == "" {
@@ -72,7 +78,7 @@ func RefreshToken(db *gorm.DB, refresh string, accessToken string) (string, stri
 		}
 
 		if user.Refresh == refresh {
-			newToken, err := GenJwtToken("user", user.ID, 86400)
+			newToken, err := t.GenJwtToken("user", user.ID, 86400)
 			if err != "" {
 				return err, "", ""
 			}
@@ -94,7 +100,7 @@ func RefreshToken(db *gorm.DB, refresh string, accessToken string) (string, stri
 
 }
 
-func AdminRefreshToken(db *gorm.DB, refresh string, accessToken string) (string, string, string) {
+func (t *token) AdminRefreshToken(db *gorm.DB, refresh string, accessToken string) (string, string, string) {
 
 	tokenString := accessToken
 	if tokenString == "" {
@@ -134,7 +140,7 @@ func AdminRefreshToken(db *gorm.DB, refresh string, accessToken string) (string,
 		}
 
 		if user.Refresh == refresh {
-			newToken, err := GenJwtToken("admin", user.ID, 86400)
+			newToken, err := t.GenJwtToken("admin", user.ID, 86400)
 			if err != "" {
 				return err, "", ""
 			}
