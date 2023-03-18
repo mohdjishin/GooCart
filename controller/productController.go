@@ -15,7 +15,13 @@ import (
 	utils "github.com/mohdjishin/GoCart/utils"
 )
 
-func AddProducts(c *fiber.Ctx) error {
+type Products struct{}
+
+func NewProduct() *IProduct {
+	return &Products{}
+}
+
+func (*Products) AddProducts(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 
@@ -99,7 +105,7 @@ func AddProducts(c *fiber.Ctx) error {
 	})
 }
 
-func UpdatePro(c *fiber.Ctx) error {
+func (*Products) UpdatePro(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 
@@ -207,7 +213,7 @@ func UpdatePro(c *fiber.Ctx) error {
 
 }
 
-func DelProduct(c *fiber.Ctx) error {
+func (*Products) DelProduct(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	id := c.Params("id")
@@ -242,7 +248,7 @@ func DelProduct(c *fiber.Ctx) error {
 		"message": "product deleted",
 	})
 }
-func ViewProducts(c *fiber.Ctx) error {
+func (*Products) ViewProducts(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 
@@ -271,7 +277,7 @@ func ViewProducts(c *fiber.Ctx) error {
 
 }
 
-func GetbyCategory(c *fiber.Ctx) error {
+func (*Products) GetbyCategory(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
 	type category struct {
@@ -296,7 +302,7 @@ func GetbyCategory(c *fiber.Ctx) error {
 	return c.Status(200).JSON(products)
 }
 
-func SearchProduct(c *fiber.Ctx) error {
+func (*Products) SearchProduct(c *fiber.Ctx) error {
 	db := DB.OpenDb()
 
 	defer DB.CloseDb(db)

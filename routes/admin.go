@@ -6,6 +6,8 @@ import (
 	"github.com/mohdjishin/GoCart/middleware"
 )
 
+var p = controller.NewProduct()
+
 func AdminRoute(app *fiber.App) {
 
 	// app.Post("/admin/signup", controller.Signup)
@@ -15,9 +17,9 @@ func AdminRoute(app *fiber.App) {
 
 	app.Post("/admins/refresh", controller.AdminRefresh)
 	admin.Get("/admin_panel", controller.Validate)
-	admin.Post("/admin_panel/add_product", controller.AddProducts)
-	admin.Put("/admin_panel/products/edit_products/:id", controller.UpdatePro)
-	admin.Delete("/admin_panel/products/delete_products/:id", controller.DelProduct)
+	admin.Post("/admin_panel/add_product", p.AddProducts)
+	admin.Put("/admin_panel/products/edit_products/:id", p.UpdatePro)
+	admin.Delete("/admin_panel/products/delete_products/:id", p.DelProduct)
 	admin.Get("/admin_panel/view_users", controller.ViewUsers)
 
 	admin.Post("admin_panel/user_management", controller.UserManagement)
