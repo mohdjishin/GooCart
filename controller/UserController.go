@@ -8,7 +8,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/mohdjishin/GoCart/database"
 	I "github.com/mohdjishin/GoCart/interfaces"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
@@ -18,18 +17,16 @@ import (
 var BillGen = utils.NewBillGenerator()
 var Token = utils.NewToken()
 
-type User struct {
-	DB *database.Database
-}
+type User struct{}
 
 func NewUserFunc() I.IUser {
 	return &User{}
 }
 
-func (u *User) UserSignup(c *fiber.Ctx) error {
+func (*User) UserSignup(c *fiber.Ctx) error {
 
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	user := new(model.Users)
 	if err := c.BodyParser(user); err != nil {
@@ -97,9 +94,9 @@ func (u *User) UserSignup(c *fiber.Ctx) error {
 	return c.Status(200).SendString("account created")
 }
 
-func (u *User) UserLogin(c *fiber.Ctx) error {
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+func (*User) UserLogin(c *fiber.Ctx) error {
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 
 	body := new(model.Users)
 
@@ -181,10 +178,11 @@ func (*User) Home(c *fiber.Ctx) error {
 	return nil
 }
 
-func (u *User) Verification(c *fiber.Ctx) error {
+func (*User) Verification(c *fiber.Ctx) error {
 
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+	db := DB.OpenDb()
+
+	defer DB.CloseDb(db)
 	status := false
 
 	userId := c.Locals("id")
@@ -223,9 +221,9 @@ func (u *User) Verification(c *fiber.Ctx) error {
 
 }
 
-func (u *User) EditUserInfo(c *fiber.Ctx) error {
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+func (*User) EditUserInfo(c *fiber.Ctx) error {
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	userId := c.Locals("id")
 
 	// get user info from req
@@ -296,9 +294,9 @@ func (u *User) EditUserInfo(c *fiber.Ctx) error {
 	return c.Status(200).JSON(res)
 }
 
-func (u *User) AddToCart(c *fiber.Ctx) error {
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+func (*User) AddToCart(c *fiber.Ctx) error {
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	user_Id := c.Locals("id")
 	usr_id := fmt.Sprintf("%v", user_Id)
 
@@ -372,9 +370,9 @@ func (u *User) AddToCart(c *fiber.Ctx) error {
 	return c.Status(200).JSON(cart)
 }
 
-func (u *User) OrderFromCart(c *fiber.Ctx) error {
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+func (*User) OrderFromCart(c *fiber.Ctx) error {
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	user_Id := c.Locals("id")
 	usr_id := fmt.Sprintf("%v", user_Id)
 
@@ -415,9 +413,9 @@ func (u *User) OrderFromCart(c *fiber.Ctx) error {
 	})
 }
 
-func (u *User) Checkout(c *fiber.Ctx) error {
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+func (*User) Checkout(c *fiber.Ctx) error {
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	uid := c.Locals("id")
 	user_id := fmt.Sprintf("%v", uid)
 	cartTotal := new(model.CartTotal)
@@ -485,9 +483,9 @@ func (*User) UserLogout(c *fiber.Ctx) error {
 
 }
 
-func (u *User) Refresh(c *fiber.Ctx) error {
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+func (*User) Refresh(c *fiber.Ctx) error {
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	type refreshToken struct {
 		Access_token  string `json:"access_token"`
 		Refresh_token string `json:"refresh_token"`
@@ -509,10 +507,10 @@ func (u *User) Refresh(c *fiber.Ctx) error {
 	})
 }
 
-func (u *User) GenerateInvoice(c *fiber.Ctx) error {
+func (*User) GenerateInvoice(c *fiber.Ctx) error {
 
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	orderId := c.Params("order_id")
 
 	bill := new(model.Invoice)
@@ -560,10 +558,10 @@ func (u *User) GenerateInvoice(c *fiber.Ctx) error {
 	})
 }
 
-func (u *User) RemoveFromCart(c *fiber.Ctx) error {
+func (*User) RemoveFromCart(c *fiber.Ctx) error {
 
-	db := u.DB.OpenDb()
-	defer u.DB.CloseDb(db)
+	db := DB.OpenDb()
+	defer DB.CloseDb(db)
 	user_Id := c.Locals("id")
 	usr_id := fmt.Sprintf("%v", user_Id)
 
