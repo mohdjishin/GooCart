@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/mohdjishin/GoCart/controller"
 	"github.com/mohdjishin/GoCart/middleware"
 )
@@ -11,6 +12,8 @@ var u = controller.NewUserFunc()
 func UserRoute(app *fiber.App) {
 
 	app.Get("/", u.First)
+
+	app.Get("/metrics", monitor.New(monitor.Config{Title: "MyService Metrics Page"}))
 	app.Post("/user/registration", u.UserSignup) //json
 	app.Post("/user/login", u.UserLogin)         //json
 	app.Post("/user/refresh", u.Refresh)
