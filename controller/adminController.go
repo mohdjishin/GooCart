@@ -14,8 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Admin struct {
-}
+type Admin struct{}
 
 var DB = database.NewDatabaseConnection()
 

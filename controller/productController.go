@@ -11,20 +11,23 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"github.com/mohdjishin/GoCart/database"
 	I "github.com/mohdjishin/GoCart/interfaces"
 	"github.com/mohdjishin/GoCart/model"
 	utils "github.com/mohdjishin/GoCart/utils"
 )
 
-type Products struct{}
+type Products struct {
+	DB *database.Database
+}
 
 func NewProduct() I.IProduct {
 	return &Products{}
 }
 
-func (*Products) AddProducts(c *fiber.Ctx) error {
-	db := DB.OpenDb()
-	defer DB.CloseDb(db)
+func (p *Products) AddProducts(c *fiber.Ctx) error {
+	db := p.DB.OpenDb()
+	defer p.DB.CloseDb(db)
 
 	product := new(model.Products)
 
@@ -106,9 +109,9 @@ func (*Products) AddProducts(c *fiber.Ctx) error {
 	})
 }
 
-func (*Products) UpdatePro(c *fiber.Ctx) error {
-	db := DB.OpenDb()
-	defer DB.CloseDb(db)
+func (p *Products) UpdatePro(c *fiber.Ctx) error {
+	db := p.DB.OpenDb()
+	defer p.DB.CloseDb(db)
 
 	id := c.Params("id")
 	fmt.Println(id)
@@ -214,9 +217,10 @@ func (*Products) UpdatePro(c *fiber.Ctx) error {
 
 }
 
-func (*Products) DelProduct(c *fiber.Ctx) error {
-	db := DB.OpenDb()
-	defer DB.CloseDb(db)
+func (p *Products) DelProduct(c *fiber.Ctx) error {
+	db := p.DB.OpenDb()
+	defer p.DB.CloseDb(db)
+
 	id := c.Params("id")
 	fmt.Println(id)
 
@@ -249,9 +253,9 @@ func (*Products) DelProduct(c *fiber.Ctx) error {
 		"message": "product deleted",
 	})
 }
-func (*Products) ViewProducts(c *fiber.Ctx) error {
-	db := DB.OpenDb()
-	defer DB.CloseDb(db)
+func (p *Products) ViewProducts(c *fiber.Ctx) error {
+	db := p.DB.OpenDb()
+	defer p.DB.CloseDb(db)
 
 	var products []model.Products
 
@@ -278,9 +282,10 @@ func (*Products) ViewProducts(c *fiber.Ctx) error {
 
 }
 
-func (*Products) GetbyCategory(c *fiber.Ctx) error {
-	db := DB.OpenDb()
-	defer DB.CloseDb(db)
+func (p *Products) GetbyCategory(c *fiber.Ctx) error {
+	db := p.DB.OpenDb()
+	defer p.DB.CloseDb(db)
+
 	type category struct {
 		Category string `json:"pro_category"`
 	}
@@ -303,10 +308,10 @@ func (*Products) GetbyCategory(c *fiber.Ctx) error {
 	return c.Status(200).JSON(products)
 }
 
-func (*Products) SearchProduct(c *fiber.Ctx) error {
-	db := DB.OpenDb()
+func (p *Products) SearchProduct(c *fiber.Ctx) error {
+	db := p.DB.OpenDb()
+	defer p.DB.CloseDb(db)
 
-	defer DB.CloseDb(db)
 	id := c.Params("key")
 	fmt.Println(id)
 
