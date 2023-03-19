@@ -13,7 +13,7 @@ func UserRoute(app *fiber.App) {
 
 	app.Get("/", u.First)
 
-	app.Get("/metrics", monitor.New(monitor.Config{Title: "MyService Metrics Page"}))
+	app.Get("/metrics", monitor.New(monitor.Config{Title: "GoCart Metrics Page"}))
 	app.Post("/user/registration", u.UserSignup) //json
 	app.Post("/user/login", u.UserLogin)         //json
 	app.Post("/user/refresh", u.Refresh)
