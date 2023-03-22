@@ -1,13 +1,12 @@
 package main
 
 import (
-	"log"
-	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/mohdjishin/GoCart/database"
 	"github.com/mohdjishin/GoCart/routes"
+	"github.com/mohdjishin/GoCart/utils"
 )
 
 func init() {
@@ -24,6 +23,5 @@ func main() {
 
 	routes.UserRoute(app)
 
-	log.Fatal(app.Listen(":" + os.Getenv("PORT")))
-
+	utils.ListenAndShutdown(app)
 }
