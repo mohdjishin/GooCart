@@ -117,11 +117,6 @@ GooCart/
 ├── database/
 │   ├── connectToDB.go
 │   └── syncDataBase.go
-├── docker-compose.yml
-├── Dockerfile
-├── DockerfileSingle
-├── go.mod
-├── go.sum
 ├── interfaces/
 │   ├── IAdmin.go
 │   ├── IBill.go
@@ -133,9 +128,6 @@ GooCart/
 │   ├── gocart-deployment.yml
 │   ├── gocart-Persistent.yml
 │   └── gocart-service.yml
-├── LICENSE
-├── main.go
-├── makefile
 ├── media/
 │   └── images/
 │       └── logo.png
@@ -146,24 +138,31 @@ GooCart/
 │   ├── orders.go
 │   ├── products.go
 │   └── user.go
-├── README.md
 ├── routes/
 │   ├── admin.go
 │   └── user.go
-└── utils/
-    ├── billGen.go
-    ├── billGEn_test.go
-    ├── error.go
-    ├── GraceFullShutdown.go
-    ├── GraceFullShutdown_test.go
-    ├── helpers.go
-    ├── helpers_test.go
-    ├── jwt.go
-    ├── jwt_test.go
-    ├── otp.go
-    └── payment.go
-
-
+├── utils/
+│   ├── billGen.go
+│   ├── billGEn_test.go
+│   ├── error.go
+│   ├── GraceFullShutdown.go
+│   ├── GraceFullShutdown_test.go
+│   ├── helpers.go
+│   ├── helpers_test.go
+│   ├── jwt.go
+│   ├── jwt_test.go
+│   ├── otp.go
+│   └── payment.go
+│
+├── Dockerfile
+├── DockerfileSingle
+├── docker-compose.yml 
+├── go.sum
+├── go.mod
+├── main.go 
+├── LICENSE 
+├── makefile
+└── README.md
 ```
 
 
