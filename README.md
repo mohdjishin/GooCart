@@ -5,6 +5,70 @@
 GooCart is a high-performance e-commerce platform backend written in Go language. It is designed to handle a large number of requests and transactions efficiently, making it ideal for large-scale e-commerce operations!
 
 
+## File Structure
+```
+GooCart/
+├── controller/
+│   ├── adminController.go
+│   ├── productController.go
+│   ├── productController_test.go
+│   ├── UserController.go
+│   └── UserController_test.go
+├── database/
+│   ├── connectToDB.go
+│   └── syncDataBase.go
+├── docker-compose.yml
+├── Dockerfile
+├── DockerfileSingle
+├── go.mod
+├── go.sum
+├── interfaces/
+│   ├── IAdmin.go
+│   ├── IBill.go
+│   ├── IDatabase.go
+│   ├── IProduct.go
+│   ├── IToken.go
+│   └── IUser.go
+├── k8s/
+│   ├── gocart-deployment.yml
+│   ├── gocart-Persistent.yml
+│   └── gocart-service.yml
+├── LICENSE
+├── main.go
+├── makefile
+├── media/
+│   └── images/
+│       └── logo.png
+├── middleware/
+│   └── requireAuth.go
+├── model/
+│   ├── admin.go
+│   ├── orders.go
+│   ├── products.go
+│   └── user.go
+├── README.md
+├── routes/
+│   ├── admin.go
+│   └── user.go
+└── utils/
+    ├── billGen.go
+    ├── billGEn_test.go
+    ├── error.go
+    ├── GraceFullShutdown.go
+    ├── GraceFullShutdown_test.go
+    ├── helpers.go
+    ├── helpers_test.go
+    ├── jwt.go
+    ├── jwt_test.go
+    ├── otp.go
+    └── payment.go
+
+
+```
+
+
+
+
 
 ## Technologies and tools used
 
