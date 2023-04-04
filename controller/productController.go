@@ -73,18 +73,18 @@ func (*Products) AddProducts(c *fiber.Ctx) error {
 	url1, status1, _ := utils.UploadToBucket(fileOne)
 	if !status1 {
 
-		utils.InternalServerError("img one upload failed", c)
+		_ = utils.InternalServerError("img one upload failed", c)
 	}
 
 	url2, status2, _ := utils.UploadToBucket(fileTWo)
 	if !status2 {
 
-		utils.InternalServerError("img two upload failed", c)
+		_ = utils.InternalServerError("img two upload failed", c)
 	}
 	url3, status3, _ := utils.UploadToBucket(fileThree)
 	if !status3 {
 
-		utils.InternalServerError("img three upload failed", c)
+		_ = utils.InternalServerError("img three upload failed", c)
 	}
 	fileOne.Filename = url1
 	fileTWo.Filename = url2
@@ -97,7 +97,7 @@ func (*Products) AddProducts(c *fiber.Ctx) error {
 	res = db.Save(&productImage)
 	if res.Error != nil {
 
-		utils.InternalServerError("failed in creating products", c)
+		_ = utils.InternalServerError("failed in creating products", c)
 
 	}
 
@@ -174,7 +174,7 @@ func (*Products) UpdatePro(c *fiber.Ctx) error {
 		*url, *status, _ = utils.UploadToBucket(fileOne)
 		if !*status {
 
-			utils.InternalServerError("img one upload failed", c)
+			_ = utils.InternalServerError("img one upload failed", c)
 		}
 		w.Done()
 	}(&url1, &status1, fileOne, &wg)
@@ -183,7 +183,7 @@ func (*Products) UpdatePro(c *fiber.Ctx) error {
 		*url, *status, _ = utils.UploadToBucket(fileTwo)
 		if !*status {
 
-			utils.InternalServerError("img two upload failed", c)
+			_ = utils.InternalServerError("img two upload failed", c)
 		}
 		w.Done()
 	}(&url2, &status2, fileTwo, &wg)
@@ -193,7 +193,7 @@ func (*Products) UpdatePro(c *fiber.Ctx) error {
 		*url, *status, _ = utils.UploadToBucket(fileThree)
 		if !*status {
 
-			utils.InternalServerError("img three upload failed", c)
+			_ = utils.InternalServerError("img three upload failed", c)
 		}
 		w.Done()
 	}(&url3, &status3, fileTwo, &wg)

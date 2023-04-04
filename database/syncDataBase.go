@@ -1,23 +1,38 @@
 package database
 
-import "github.com/mohdjishin/GoCart/model"
+import (
+	"log"
+
+	"github.com/mohdjishin/GoCart/model"
+)
 
 var DB = NewDatabaseConnection()
 
 func SyncDatabase() {
 	db := DB.OpenDb()
 	defer DB.CloseDb(db)
-	db.AutoMigrate(&model.Admin{})
-
-	db.AutoMigrate(&model.Products{})
-	db.AutoMigrate(&model.ProductImage{})
-
-	db.AutoMigrate(&model.Users{})
-	db.AutoMigrate(&model.Address{})
-
-	db.AutoMigrate(&model.Cart{})
-	db.AutoMigrate(&model.Order{})
-	db.AutoMigrate(&model.CartTotal{})
+	err := db.AutoMigrate(&model.Admin{})
+	errHandler(err)
+	err = db.AutoMigrate(&model.Products{})
+	errHandler(err)
+	err = db.AutoMigrate(&model.ProductImage{})
+	errHandler(err)
+	err = db.AutoMigrate(&model.Users{})
+	errHandler(err)
+	err = db.AutoMigrate(&model.Address{})
+	errHandler(err)
+	err = db.AutoMigrate(&model.Cart{})
+	errHandler(err)
+	err = db.AutoMigrate(&model.Order{})
+	errHandler(err)
+	err = db.AutoMigrate(&model.CartTotal{})
+	errHandler(err)
 	// db.AutoMigrate(&model.CheckOut{})
 	// db.AutoMigrate(&model.DirectIdCheckout{})
+}
+
+func errHandler(e error) {
+	if e != nil {
+		log.Println(e)
+	}
 }
