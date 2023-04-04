@@ -151,7 +151,7 @@ func (*User) UserLogin(c *fiber.Ctx) error {
 	fmt.Println(tokenString)
 	if err != nil {
 
-		utils.InternalServerError("Issue generating token", c)
+		_ = utils.InternalServerError("Issue generating token", c)
 	}
 
 	// set to cookie
@@ -204,7 +204,11 @@ func (*User) Verification(c *fiber.Ctx) error {
 	} else {
 		if user.OTP == otp.OTP {
 			status = true
-			utils.WelcomeMsg("+" + user.CountryCode + user.Phone)
+			err := utils.WelcomeMsg("+" + user.CountryCode + user.Phone)
+
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 
 		user.Verified = status
