@@ -343,7 +343,7 @@ func (*User) AddToCart(c *fiber.Ctx) error {
 		cart.Total = (cart.Price * float64(cart.Quantity))
 		res := db.Create(&cart)
 		if res.Error != nil {
-			utils.InternalServerError("failed adding to cart", c)
+			_ = utils.InternalServerError("failed adding to cart", c)
 
 		}
 		return c.Status(200).JSON(cart)
@@ -367,7 +367,7 @@ func (*User) AddToCart(c *fiber.Ctx) error {
 	res = db.Save(&cart)
 	if res.Error != nil {
 
-		utils.InternalServerError("failed adding to cart", c)
+		_ = utils.InternalServerError("failed adding to cart", c)
 
 	}
 
