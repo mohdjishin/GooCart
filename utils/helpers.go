@@ -176,7 +176,13 @@ func UploadPDFToS3(filePath string, filname string) (bool, string) {
 		return false, ""
 
 	}
-	defer file.Close()
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			fmt.Println("error closing file")
+		}
+
+	}()
 
 	uploader := manager.NewUploader(client)
 	result, UploadErr := uploader.Upload(context.TODO(), &s3.PutObjectInput{
