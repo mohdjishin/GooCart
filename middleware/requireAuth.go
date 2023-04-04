@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -66,8 +67,10 @@ func RequireAdminAuth(c *fiber.Ctx) error {
 
 		c.Locals("id", user.ID)
 
-		c.Next()
-
+		err = c.Next()
+		if err != nil {
+			log.Println(err)
+		}
 	} else {
 		fmt.Println(err)
 		return c.SendStatus(http.StatusUnauthorized)
@@ -127,7 +130,10 @@ func RequreUserAuth(c *fiber.Ctx) error {
 
 		c.Locals("id", user.ID)
 
-		c.Next()
+		err = c.Next()
+		if err != nil {
+			log.Println(err)
+		}
 
 	} else {
 		fmt.Println(err)
