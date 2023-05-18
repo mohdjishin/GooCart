@@ -67,6 +67,13 @@ func (*Admin) Login(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
+	err := utils.ValidateStruct(body)
+
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+
 	usr := new(model.Admin)
 	db.First(&usr, "username=?", body.Username)
 	if usr.ID == 0 {
