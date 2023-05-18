@@ -7,12 +7,12 @@ import (
 type Users struct {
 	gorm.Model
 
-	Name        string `json:"name"`
-	Username    string `json:"username"  gorm:"index;unique"`
-	Email       string `json:"email"  `
-	Password    string `json:"password"`
-	Phone       string `json:"phone"`
-	CountryCode string `json:"country_code"`
+	Name        string `json:"name" validate:"required"`
+	Username    string `json:"username"  gorm:"index;unique" validate:"required"`
+	Email       string `json:"email" validate:"required,email" `
+	Password    string `json:"password" validate:"required" `
+	Phone       string `json:"phone" validate:"required"`
+	CountryCode string `json:"country_code" validate:"required"`
 	Verified    bool
 	OTP         string
 	Status      bool   `json:"status"`
@@ -22,13 +22,13 @@ type Users struct {
 
 type Address struct {
 	gorm.Model
-	UserId uint `gorm:"index;unique"`
+	UserId uint `gorm:"index;unique" `
 	// Users     Users
-	HouseName string `json:"house_name"`
-	Street    string `json:"street"`
-	City      string `json:"city"`
-	State     string `json:"state"`
-	Pin       string `json:"pin"`
+	HouseName string `json:"house_name" validate:"required"`
+	Street    string `json:"street" validate:"required"`
+	City      string `json:"city" validate:"required"`
+	State     string `json:"state" validate:"required"`
+	Pin       string `json:"pin" validate:"required"`
 }
 
 type OTP struct {
