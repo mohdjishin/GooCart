@@ -73,7 +73,7 @@ func (*Admin) Login(c *fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
 		})
-
+	}
 	usr := new(model.Admin)
 	db.First(&usr, "username=?", body.Username)
 	if usr.ID == 0 {
@@ -84,7 +84,7 @@ func (*Admin) Login(c *fiber.Ctx) error {
 
 	// check pass
 
-	err := bcrypt.CompareHashAndPassword([]byte(usr.Password), []byte(body.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(usr.Password), []byte(body.Password))
 	if err != nil {
 
 		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
