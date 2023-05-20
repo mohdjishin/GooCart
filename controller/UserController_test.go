@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
-
 	"github.com/stretchr/testify/assert"
 )
 

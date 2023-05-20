@@ -33,7 +33,18 @@ func (*User) UserSignup(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
+	if err := utils.ValidateStruct(user); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
 	address := new(model.Address)
+	if err := utils.ValidateStruct(address); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
 	if err := c.BodyParser(address); err != nil {
 		return c.Status(500).SendString(err.Error())
 	}
