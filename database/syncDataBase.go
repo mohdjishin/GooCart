@@ -27,8 +27,7 @@ func SyncDatabase() {
 	errHandler(err)
 	err = db.AutoMigrate(&model.CartTotal{})
 	errHandler(err)
-	// db.AutoMigrate(&model.CheckOut{})
-	// db.AutoMigrate(&model.DirectIdCheckout{})
+
 }
 
 func errHandler(e error) {
