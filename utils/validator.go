@@ -6,7 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func ValidateStruct(s any) error {
+func ValidateStruct[T any](s T) error {
 	validate := validator.New()
 	if err := validate.Struct(s); err != nil {
 		// Validation failed

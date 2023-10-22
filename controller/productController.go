@@ -160,13 +160,6 @@ func (*Products) UpdatePro(c *fiber.Ctx) error {
 
 	var wg sync.WaitGroup
 
-	var FileUpload struct {
-		Url    string
-		Status bool
-		file   *multipart.FileHeader
-	}
-	fileInfo := []FileUpload{}
-
 	var url1 string
 	var status1 bool
 
