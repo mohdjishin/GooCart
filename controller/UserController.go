@@ -556,7 +556,7 @@ func (*User) GenerateInvoice(c *fiber.Ctx) error {
 
 	filen := BillGen.GenerateInvoice(*bill)
 
-	st, url := utils.UploadPDFToS3("/home/mohdjishin/brototype/GoCart/media/pdf/"+filen, filen)
+	st, url := utils.UploadPDFToS3[string]("/home/mohdjishin/brototype/GoCart/media/pdf/"+filen, filen)
 	if st {
 		fmt.Println("uploaded")
 		err := os.Remove("/home/mohdjishin/brototype/GoCart/media/pdf/" + filen)

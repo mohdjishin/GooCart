@@ -119,12 +119,12 @@ func Combined(users []PersonalInformation, addresses []Extractaddress) []Combine
 	return combined
 }
 
-func CheckComplexityOFPassword(password string) bool {
+func CheckComplexityOFPassword[T string](password T) bool {
 	hasNumber := regexp.MustCompile(`[0-9]`).MatchString
 	hasUpper := regexp.MustCompile(`[A-Z]`).MatchString
 	hasLower := regexp.MustCompile(`[a-z]`).MatchString
 	hasSymbol := regexp.MustCompile(`[!@#\$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]`).MatchString
-	return hasNumber(password) && hasUpper(password) && hasLower(password) && hasSymbol(password)
+	return hasNumber(string(password)) && hasUpper(string(password)) && hasLower(string(password)) && hasSymbol(string(password))
 }
 
 func UploadToBucket(file *multipart.FileHeader) (string, bool, string) {
@@ -161,7 +161,7 @@ func UploadToBucket(file *multipart.FileHeader) (string, bool, string) {
 
 }
 
-func UploadPDFToS3(filePath string, filname string) (bool, string) {
+func UploadPDFToS3[T string](filePath, filname string) (bool, string) {
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		log.Printf("error: %v", err)
@@ -200,7 +200,7 @@ func UploadPDFToS3(filePath string, filname string) (bool, string) {
 	return true, result.Location
 }
 
-func ExtractProductInfo(product []model.Products) []ProductInfo {
+func ExtractProductInfo[T []model.Products](product T) []ProductInfo {
 	var newpro []ProductInfo
 	for _, pro := range product {
 		newpro = append(newpro, ProductInfo{
@@ -212,7 +212,7 @@ func ExtractProductInfo(product []model.Products) []ProductInfo {
 	}
 	return newpro
 }
-func ExtractProImage(proImg []model.ProductImage) []ProductImageInfo {
+func ExtractProImage[T []model.ProductImage, R []ProductImageInfo](proImg T) R {
 	var productImages []ProductImageInfo
 	for _, pro := range proImg {
 		productImages = append(productImages, ProductImageInfo{
@@ -224,7 +224,7 @@ func ExtractProImage(proImg []model.ProductImage) []ProductImageInfo {
 	}
 	return productImages
 }
-func ExtractOrderInfo(order []model.Order) []model.OrderRespAdmin {
+func ExtractOrderInfo[T []model.Order, R []model.OrderRespAdmin](order T) R {
 	var orderInfo []model.OrderRespAdmin
 	for _, or := range order {
 		orderInfo = append(orderInfo, model.OrderRespAdmin{
