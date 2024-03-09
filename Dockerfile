@@ -1,19 +1,13 @@
-FROM alpine:latest
+FROM golang:latest
 
-
-
-# Working directory
 WORKDIR /app
 
+COPY go.mod go.sum ./
 
-# Copy the source from the current directory to the Working Directory inside the container
-COPY main .
+COPY . ./
 
+RUN go build -o main
 
-CMD [ "./main" ]
-
-
-# Expose port 8080 to the outside world
 EXPOSE 8080
 
-
+CMD ["./main"]
